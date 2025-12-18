@@ -16,7 +16,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
     @Override
     public ApiKey updateApiKey(Long id, ApiKey key) {
-        key.setId(id);
+        
         return key;
     }
 

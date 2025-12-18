@@ -16,7 +16,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
     @Override
     public KeyExemption updateExemption(Long id, KeyExemption exemption) {
-        exemption.setId(id);
+        
         return exemption;
     }
 

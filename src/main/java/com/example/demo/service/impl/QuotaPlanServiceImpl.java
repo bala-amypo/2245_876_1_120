@@ -16,7 +16,7 @@ public class QuotaPlanServiceImpl implements QuotaPlanService {
 
     @Override
     public QuotaPlan updateQuotaPlan(Long id, QuotaPlan plan) {
-        plan.setId(id);
+       
         return plan;
     }
 
@@ -32,6 +32,6 @@ public class QuotaPlanServiceImpl implements QuotaPlanService {
 
     @Override
     public void deactivateQuotaPlan(Long id) {
-        // dummy
+      
     }
 }
