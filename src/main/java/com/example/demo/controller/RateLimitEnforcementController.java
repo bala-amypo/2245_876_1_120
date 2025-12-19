@@ -7,25 +7,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rate-limit-enforcements")
+@RequestMapping("/api/enforcements")
 public class RateLimitEnforcementController {
 
     private final RateLimitEnforcementService service;
 
-    public RateLimitEnforcementController(
-            RateLimitEnforcementService service) {
+    public RateLimitEnforcementController(RateLimitEnforcementService service) {
         this.service = service;
     }
 
     @PostMapping
-    public RateLimitEnforcement enforce(
-            @RequestBody RateLimitEnforcement enforcement) {
-        return service.enforce(enforcement);
+    public RateLimitEnforcement create(@RequestBody RateLimitEnforcement enforcement) {
+        return service.createEnforcement(enforcement);
+    }
+
+    @GetMapping("/{id}")
+    public RateLimitEnforcement getById(@PathVariable Long id) {
+        return service.getEnforcementById(id);
     }
 
     @GetMapping("/key/{keyId}")
-    public List<RateLimitEnforcement> getForKey(
-            @PathVariable Long keyId) {
-        return service.getForApiKey(keyId);
+    public List<RateLimitEnforcement> getForKey(@PathVariable Long keyId) {
+        return service.getEnforcementsForKey(keyId);
     }
 }
