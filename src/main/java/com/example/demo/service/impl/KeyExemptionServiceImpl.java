@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
             throw new BadRequestException("Invalid extension limit");
         }
 
-        if (exemption.getValidUntil().isBefore(java.time.LocalDateTime.now())) {
+        if (exemption.getValidUntil().isBefore(Instant.now())) {
             throw new BadRequestException("validUntil must be in the future");
         }
 

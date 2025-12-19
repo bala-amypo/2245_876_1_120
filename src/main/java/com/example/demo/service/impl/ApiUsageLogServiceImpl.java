@@ -29,7 +29,7 @@ public class ApiUsageLogServiceImpl implements ApiUsageLogService {
     @Override
     public ApiUsageLog logUsage(ApiUsageLog log) {
 
-        if (log.getTimestamp().isAfter(java.time.LocalDateTime.now())) {
+        if (log.getTimestamp().isAfter(Instant.now())) {
             throw new BadRequestException("Timestamp cannot be in the future");
         }
 
