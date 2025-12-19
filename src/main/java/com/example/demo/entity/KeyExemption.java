@@ -11,13 +11,14 @@ public class KeyExemption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "api_key_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "api_key_id")
     private ApiKey apiKey;
 
     private String notes;
 
-    private Boolean unlimitedAccess;
+    @Column(nullable = false)
+    private Boolean unlimitedAccess = false;
 
     private Integer temporaryExtensionLimit;
 
@@ -34,16 +35,29 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // Getters and setters
+    // ===== Getters & Setters =====
     public Long getId() { return id; }
     public ApiKey getApiKey() { return apiKey; }
-    public String getNotes() { return notes; }
-    public Boolean getUnlimitedAccess() { return unlimitedAccess; }
-    public Integer getTemporaryExtensionLimit() { return temporaryExtensionLimit; }
-    public Instant getValidUntil() { return validUntil; }
+    public void setApiKey(ApiKey apiKey) { this.apiKey = apiKey; }
 
+    public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
-    public void setUnlimitedAccess(Boolean unlimitedAccess) { this.unlimitedAccess = unlimitedAccess; }
-    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) { this.temporaryExtensionLimit = temporaryExtensionLimit; }
-    public void setValidUntil(Instant validUntil) { this.validUntil = validUntil; }
+
+    public Boolean getUnlimitedAccess() { return unlimitedAccess; }
+    public void setUnlimitedAccess(Boolean unlimitedAccess) {
+        this.unlimitedAccess = unlimitedAccess;
+    }
+
+    public Integer getTemporaryExtensionLimit() {
+        return temporaryExtensionLimit;
+    }
+
+    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) {
+        this.temporaryExtensionLimit = temporaryExtensionLimit;
+    }
+
+    public Instant getValidUntil() { return validUntil; }
+    public void setValidUntil(Instant validUntil) {
+        this.validUntil = validUntil;
+    }
 }
