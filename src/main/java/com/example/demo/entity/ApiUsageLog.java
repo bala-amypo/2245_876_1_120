@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
-
-@Table(name="api_usage_logs");
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "api_usage_logs")
 public class ApiUsageLog {
 
     @Id
@@ -13,14 +12,14 @@ public class ApiUsageLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "api_key_id")
     private ApiKey apiKey;
 
     @Column(nullable = false)
     private String endpoint;
 
     @Column(nullable = false)
-    private Instant timestamp;
+    private LocalDateTime timestamp;
 
-    
+    public ApiUsageLog() {}
 }

@@ -1,11 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
-
-@Table(name="rate_limit_enforcements");
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "rate_limit_enforcements")
 public class RateLimitEnforcement {
 
     @Id
@@ -13,17 +12,14 @@ public class RateLimitEnforcement {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "api_key_id")
     private ApiKey apiKey;
 
-    @Column(nullable = false)
-    private Instant blockedAt;
+    private LocalDateTime blockedAt;
 
-    @Column(nullable = false)
     private Integer limitExceededBy;
 
-    @Column(nullable = false)
     private String message;
 
-    
+    public RateLimitEnforcement() {}
 }

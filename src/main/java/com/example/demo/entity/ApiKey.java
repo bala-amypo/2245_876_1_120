@@ -1,10 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
-@Table(name="api_keys");
 @Entity
+@Table(name = "api_keys")
 public class ApiKey {
 
     @Id
@@ -18,28 +18,14 @@ public class ApiKey {
     private Long ownerId;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "plan_id")
     private QuotaPlan plan;
 
     @Column(nullable = false)
     private Boolean active = true;
 
-    @Column(nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private Instant updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
-    }
-
-    
+    public ApiKey() {}
 }

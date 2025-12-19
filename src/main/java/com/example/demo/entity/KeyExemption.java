@@ -1,28 +1,27 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
-@Table(name="key_exemptions");
 @Entity
+@Table(name = "key_exemptions")
 public class KeyExemption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "api_key_id")
     private ApiKey apiKey;
 
     private String notes;
 
-    @Column(nullable = false)
-    private Boolean unlimitedAccess = false;
+    private Boolean unlimitedAccess;
 
     private Integer temporaryExtensionLimit;
 
-    private Instant validUntil;
+    private LocalDateTime validUntil;
 
-   
+    public KeyExemption() {}
 }

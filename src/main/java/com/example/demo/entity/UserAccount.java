@@ -3,8 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.util.Set;
 
-@Table(name="user_accounts");
 @Entity
+@Table(name = "user_accounts")
 public class UserAccount {
 
     @Id
@@ -21,7 +21,12 @@ public class UserAccount {
     private String role;
 
     @ManyToMany
+    @JoinTable(
+        name = "user_quota_plans",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "plan_id")
+    )
     private Set<QuotaPlan> quotaPlans;
 
-    
+    public UserAccount() {}
 }

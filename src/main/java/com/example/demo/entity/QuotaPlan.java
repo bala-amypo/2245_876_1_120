@@ -2,8 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
-@Table(name="quota_plans");
 @Entity
+@Table(name = "quota_plans")
 public class QuotaPlan {
 
     @Id
@@ -21,5 +21,5 @@ public class QuotaPlan {
     @Column(nullable = false)
     private Boolean active = true;
 
-    
+    public QuotaPlan() {}
 }
