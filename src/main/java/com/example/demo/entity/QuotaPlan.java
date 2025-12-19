@@ -13,16 +13,26 @@ public class QuotaPlan {
     @Column(unique = true, nullable = false)
     private String planName;
 
+    @Column(nullable = false)
     private Integer dailyLimit;
 
     private String description;
 
+    @Column(nullable = false)
     private Boolean active = true;
 
-    // ===== Getters & Setters =====
+    public QuotaPlan() {}
 
+    public QuotaPlan(String planName, Integer dailyLimit,
+                     String description, Boolean active) {
+        this.planName = planName;
+        this.dailyLimit = dailyLimit;
+        this.description = description;
+        this.active = active != null ? active : true;
+    }
+
+    // ===== Getters & Setters =====
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getPlanName() { return planName; }
     public void setPlanName(String planName) { this.planName = planName; }
