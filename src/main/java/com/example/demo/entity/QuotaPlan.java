@@ -1,9 +1,13 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "quota_plans")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuotaPlan {
 
     @Id
@@ -14,12 +18,8 @@ public class QuotaPlan {
     private String planName;
 
     @Column(nullable = false)
-    private Integer dailyLimit;
-
-    private String description;
+    private int dailyLimit;
 
     @Column(nullable = false)
     private Boolean active = true;
-
-    public QuotaPlan() {}
 }

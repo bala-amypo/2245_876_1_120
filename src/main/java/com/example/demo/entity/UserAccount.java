@@ -1,10 +1,15 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Set;
 
 @Entity
 @Table(name = "user_accounts")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAccount {
 
     @Id
@@ -22,11 +27,9 @@ public class UserAccount {
 
     @ManyToMany
     @JoinTable(
-        name = "user_quota_plans",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "plan_id")
+            name = "user_quota_plans",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "quota_plan_id")
     )
     private Set<QuotaPlan> quotaPlans;
-
-    public UserAccount() {}
 }

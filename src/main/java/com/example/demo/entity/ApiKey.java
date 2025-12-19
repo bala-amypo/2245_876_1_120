@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Table(name = "api_keys")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiKey {
 
     @Id
@@ -14,18 +17,10 @@ public class ApiKey {
     @Column(nullable = false, unique = true)
     private String keyValue;
 
-    @Column(nullable = false)
-    private Long ownerId;
-
     @ManyToOne
-    @JoinColumn(name = "plan_id")
+    @JoinColumn(name = "plan_id", nullable = false)
     private QuotaPlan plan;
 
     @Column(nullable = false)
     private Boolean active = true;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    public ApiKey() {}
 }
