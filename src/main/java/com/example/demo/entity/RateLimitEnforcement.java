@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rate_limit_enforcements")
@@ -11,23 +11,36 @@ public class RateLimitEnforcement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "api_key_id")
+    @ManyToOne
+    @JoinColumn(name = "api_key_id", nullable = false)
     private ApiKey apiKey;
 
     @Column(nullable = false)
-    private Integer enforcedLimit;
+    private LocalDateTime blockedAt;
 
     @Column(nullable = false)
-    private Instant enforcedAt;
+    private Integer limitExceededBy;
 
-    private String reason;
+    private String message;
 
+    // No-arg constructor
     public RateLimitEnforcement() {}
 
-    // ===== Getters & Setters =====
+    // Parameterized constructor
+    public RateLimitEnforcement(ApiKey apiKey, LocalDateTime blockedAt, Integer limitExceededBy, String message) {
+        this.apiKey = apiKey;
+        this.blockedAt = blockedAt;
+        this.limitExceededBy = limitExceededBy;
+        this.message = message;
+    }
+
+    // ---------------- Getters and Setters ----------------
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public ApiKey getApiKey() {
@@ -38,27 +51,27 @@ public class RateLimitEnforcement {
         this.apiKey = apiKey;
     }
 
-    public Integer getEnforcedLimit() {
-        return enforcedLimit;
+    public LocalDateTime getBlockedAt() {
+        return blockedAt;
     }
 
-    public void setEnforcedLimit(Integer enforcedLimit) {
-        this.enforcedLimit = enforcedLimit;
+    public void setBlockedAt(LocalDateTime blockedAt) {
+        this.blockedAt = blockedAt;
     }
 
-    public Instant getEnforcedAt() {
-        return enforcedAt;
+    public Integer getLimitExceededBy() {
+        return limitExceededBy;
     }
 
-    public void setEnforcedAt(Instant enforcedAt) {
-        this.enforcedAt = enforcedAt;
+    public void setLimitExceededBy(Integer limitExceededBy) {
+        this.limitExceededBy = limitExceededBy;
     }
 
-    public String getReason() {
-        return reason;
+    public String getMessage() {
+        return message;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
