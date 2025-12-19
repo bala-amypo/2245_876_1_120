@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
+key_exemptions
 @Entity
 public class KeyExemption {
 

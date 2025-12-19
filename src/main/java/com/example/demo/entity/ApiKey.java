@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
+@Table(name="api_keys");
 @Entity
 public class ApiKey {
 

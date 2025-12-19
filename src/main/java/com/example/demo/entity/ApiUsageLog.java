@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
+@Table(name="api_usage_logs");
+
 @Entity
 public class ApiUsageLog {
 

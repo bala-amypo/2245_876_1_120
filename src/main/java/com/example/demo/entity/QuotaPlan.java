@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+@Table(name="quota_plans");
 @Entity
 public class QuotaPlan {
 

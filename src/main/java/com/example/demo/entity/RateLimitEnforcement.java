@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
+@Table(name="rate_limit_enforcements");
+
 @Entity
 public class RateLimitEnforcement {
 
