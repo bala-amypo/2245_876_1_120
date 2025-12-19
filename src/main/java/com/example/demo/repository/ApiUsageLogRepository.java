@@ -1,13 +1,15 @@
 package com.example.demo.repository;
 
-import java.time.Instant;
-import java.util.List;
+import com.example.demo.entity.ApiUsageLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import com.example.demo.entity.ApiUsageLog;
 
-public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLog, Long> {
+import java.time.Instant;
+import java.util.List;
+
+public interface ApiUsageLogRepository
+        extends JpaRepository<ApiUsageLog, Long> {
 
     List<ApiUsageLog> findByApiKey_Id(Long id);
 
@@ -19,8 +21,7 @@ public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLog, Long> 
     List<ApiUsageLog> findForKeyBetween(
             @Param("keyId") Long keyId,
             @Param("start") Instant start,
-            @Param("end") Instant end
-    );
+            @Param("end") Instant end);
 
     @Query("""
         SELECT COUNT(l) FROM ApiUsageLog l
@@ -30,6 +31,5 @@ public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLog, Long> 
     int countForKeyBetween(
             @Param("keyId") Long keyId,
             @Param("start") Instant start,
-            @Param("end") Instant end
-    );
+            @Param("end") Instant end);
 }

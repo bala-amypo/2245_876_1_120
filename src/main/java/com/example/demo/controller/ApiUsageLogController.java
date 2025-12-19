@@ -1,37 +1,38 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.ApiUsageLog;
 import com.example.demo.service.ApiUsageLogService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/usage-logs")
 public class ApiUsageLogController {
 
-    @Autowired
-    private ApiUsageLogService ser;
+    private final ApiUsageLogService service;
+
+    public ApiUsageLogController(ApiUsageLogService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    public ApiUsageLog logUsage(@RequestBody ApiUsageLog log) {
-        return ser.logUsage(log);
+    public ApiUsageLog log(@RequestBody ApiUsageLog log) {
+        return service.logUsage(log);
     }
 
     @GetMapping("/key/{keyId}")
-    public List<ApiUsageLog> getUsageForKey(@PathVariable Long keyId) {
-        return ser.getUsageForApiKey(keyId);
+    public List<ApiUsageLog> getByKey(@PathVariable Long keyId) {
+        return service.getUsageForApiKey(keyId);
     }
 
     @GetMapping("/key/{keyId}/today")
-    public List<ApiUsageLog> getTodayUsage(@PathVariable Long keyId) {
-        return ser.getUsageForToday(keyId);
+    public List<ApiUsageLog> getToday(@PathVariable Long keyId) {
+        return service.getUsageForToday(keyId);
     }
 
     @GetMapping("/key/{keyId}/count-today")
-    public long countToday(@PathVariable Long keyId) {
-        return ser.countRequestsToday(keyId);
+    public int countToday(@PathVariable Long keyId) {
+        return service.countRequestsToday(keyId);
     }
 }
