@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public class RateLimitEnforcement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -28,6 +27,7 @@ public class RateLimitEnforcement {
 
     // Parameterized constructor
     public RateLimitEnforcement(ApiKey apiKey, LocalDateTime blockedAt, Integer limitExceededBy, String message) {
+        this.id=id;
         this.apiKey = apiKey;
         this.blockedAt = blockedAt;
         this.limitExceededBy = limitExceededBy;
