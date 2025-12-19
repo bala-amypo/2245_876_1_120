@@ -8,45 +8,48 @@ import com.example.demo.repository.RateLimitEnforcementRepository;
 import com.example.demo.service.RateLimitEnforcementService;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class RateLimitEnforcementServiceImpl
-        implements RateLimitEnforcementService {
+public class RateLimitEnforcementServiceImpl implements RateLimitEnforcementService {
 
-    private final RateLimitEnforcementRepository repository;
-    private final ApiKeyRepository apiKeyRepository;
+    private final RateLimitEnforcementRepository repo;
+    private final ApiKeyRepository apiKeyRepo;
 
     public RateLimitEnforcementServiceImpl(
-            RateLimitEnforcementRepository repository,
-            ApiKeyRepository apiKeyRepository) {
-        this.repository = repository;
-        this.apiKeyRepository = apiKeyRepository;
+            RateLimitEnforcementRepository repo,
+            ApiKeyRepository apiKeyRepo) {
+        this.repo = repo;
+        this.apiKeyRepo = apiKeyRepo;
     }
 
     @Override
-    public RateLimitEnforcement enforce(RateLimitEnforcement enforcement) {
+    public RateLimitEnforcement createEnforcement(RateLimitEnforcement enforcement) {
 
-        if (enforcement.getEnforcedLimit() == null ||
-            enforcement.getEnforcedLimit() <= 0) {
-            throw new BadRequestException("Enforced limit must be positive");
+        if (enforcement.getLimitExceededBy() == null ||
+            enforcement.getLimitExceededBy() < 1) {
+            throw new BadRequestException("limitExceededBy must be >= 1");
         }
 
-        if (enforcement.getEnforcedAt() == null ||
-            enforcement.getEnforcedAt().isAfter(Instant.now())) {
-            throw new BadRequestException("enforcedAt cannot be in the future");
+        apiKeyRepo.findById(enforcement.getApiKey().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("API Key not found"));
+
+        if (enforcement.getBlockedAt() == null) {
+            enforcement.setBlockedAt(LocalDateTime.now());
         }
 
-        apiKeyRepository.findById(enforcement.getApiKey().getId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("API Key not found"));
-
-        return repository.save(enforcement);
+        return repo.save(enforcement);
     }
 
     @Override
-    public List<RateLimitEnforcement> getForApiKey(Long apiKeyId) {
-        return repository.findByApiKey_Id(apiKeyId);
+    public RateLimitEnforcement getEnforcementById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Enforcement not found"));
+    }
+
+    @Override
+    public List<RateLimitEnforcement> getEnforcementsForKey(Long keyId) {
+        return repo.findByApiKey_Id(keyId);
     }
 }
