@@ -19,25 +19,20 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
     private final KeyExemptionRepository repo;
     private final ApiKeyRepository apiKeyRepo;
 
-    public KeyExemptionServiceImpl(
-            KeyExemptionRepository repo,
-            ApiKeyRepository apiKeyRepo) {
+    public KeyExemptionServiceImpl(KeyExemptionRepository repo, ApiKeyRepository apiKeyRepo) {
         this.repo = repo;
         this.apiKeyRepo = apiKeyRepo;
     }
 
     @Override
     public KeyExemption createExemption(KeyExemption exemption) {
-
         if (exemption.getTemporaryExtensionLimit() != null &&
             exemption.getTemporaryExtensionLimit() < 0) {
             throw new BadRequestException("Invalid extension limit");
         }
-
-        if (exemption.getValidUntil().isBefore(Instant.now())) {
+        if (exemption.getValidUntil() == null || exemption.getValidUntil().isBefore(Instant.now())) {
             throw new BadRequestException("validUntil must be in the future");
         }
-
         apiKeyRepo.findById(exemption.getApiKey().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("API Key not found"));
 
@@ -46,7 +41,6 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
     @Override
     public KeyExemption updateExemption(Long id, KeyExemption exemption) {
-
         KeyExemption existing = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Exemption not found"));
 

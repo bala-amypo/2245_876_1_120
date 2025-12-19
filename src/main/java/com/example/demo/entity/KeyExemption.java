@@ -11,9 +11,11 @@ public class KeyExemption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "api_key_id", nullable = false)
     private ApiKey apiKey;
+
+    private String notes;
 
     private Boolean unlimitedAccess;
 
@@ -21,27 +23,27 @@ public class KeyExemption {
 
     private Instant validUntil;
 
-    private String notes;
+    public KeyExemption() {}
 
-    // ===== Getters & Setters =====
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public ApiKey getApiKey() { return apiKey; }
-    public void setApiKey(ApiKey apiKey) { this.apiKey = apiKey; }
-
-    public Boolean getUnlimitedAccess() { return unlimitedAccess; }
-    public void setUnlimitedAccess(Boolean unlimitedAccess) { this.unlimitedAccess = unlimitedAccess; }
-
-    public Integer getTemporaryExtensionLimit() { return temporaryExtensionLimit; }
-    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) {
+    public KeyExemption(ApiKey apiKey, String notes, Boolean unlimitedAccess,
+                        Integer temporaryExtensionLimit, Instant validUntil) {
+        this.apiKey = apiKey;
+        this.notes = notes;
+        this.unlimitedAccess = unlimitedAccess;
         this.temporaryExtensionLimit = temporaryExtensionLimit;
+        this.validUntil = validUntil;
     }
 
-    public Instant getValidUntil() { return validUntil; }
-    public void setValidUntil(Instant validUntil) { this.validUntil = validUntil; }
-
+    // Getters and setters
+    public Long getId() { return id; }
+    public ApiKey getApiKey() { return apiKey; }
     public String getNotes() { return notes; }
+    public Boolean getUnlimitedAccess() { return unlimitedAccess; }
+    public Integer getTemporaryExtensionLimit() { return temporaryExtensionLimit; }
+    public Instant getValidUntil() { return validUntil; }
+
     public void setNotes(String notes) { this.notes = notes; }
+    public void setUnlimitedAccess(Boolean unlimitedAccess) { this.unlimitedAccess = unlimitedAccess; }
+    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) { this.temporaryExtensionLimit = temporaryExtensionLimit; }
+    public void setValidUntil(Instant validUntil) { this.validUntil = validUntil; }
 }
