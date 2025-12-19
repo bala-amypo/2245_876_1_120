@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
-key_exemptions
+@Table(name="key_exemptions");
 @Entity
 public class KeyExemption {
 
@@ -24,5 +24,5 @@ public class KeyExemption {
 
     private Instant validUntil;
 
-    // getters and setters
+   
 }

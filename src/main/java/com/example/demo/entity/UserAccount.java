@@ -23,5 +23,5 @@ public class UserAccount {
     @ManyToMany
     private Set<QuotaPlan> quotaPlans;
 
-    // getters and setters
+    
 }

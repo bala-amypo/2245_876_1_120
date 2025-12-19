@@ -22,5 +22,5 @@ public class ApiUsageLog {
     @Column(nullable = false)
     private Instant timestamp;
 
-    // getters and setters
+    
 }

@@ -21,5 +21,5 @@ public class QuotaPlan {
     @Column(nullable = false)
     private Boolean active = true;
 
-    // getters and setters
+    
 }

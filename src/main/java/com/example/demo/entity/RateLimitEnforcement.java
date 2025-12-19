@@ -25,5 +25,5 @@ public class RateLimitEnforcement {
     @Column(nullable = false)
     private String message;
 
-    // getters and setters
+    
 }
