@@ -8,7 +8,6 @@ import java.time.Instant;
 public class ApiKey {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -30,6 +29,7 @@ public class ApiKey {
     public ApiKey() {}
 
     public ApiKey(String keyValue, Long ownerId, QuotaPlan plan, Boolean active) {
+        this.id=id;
         this.keyValue = keyValue;
         this.ownerId = ownerId;
         this.plan = plan;

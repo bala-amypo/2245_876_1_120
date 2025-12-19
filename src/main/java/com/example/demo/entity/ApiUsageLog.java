@@ -8,7 +8,6 @@ import java.time.Instant;
 public class ApiUsageLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
@@ -24,6 +23,7 @@ public class ApiUsageLog {
     public ApiUsageLog() {}
 
     public ApiUsageLog(ApiKey apiKey, String endpoint, Instant timestamp) {
+        this.id=id;
         this.apiKey = apiKey;
         this.endpoint = endpoint;
         this.timestamp = timestamp;

@@ -9,7 +9,6 @@ import java.util.Set;
 public class UserAccount {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -35,6 +34,7 @@ public class UserAccount {
     }
 
     public UserAccount(String email, String password, String role) {
+        
         this.email = email;
         this.password = password;
         this.role = role;

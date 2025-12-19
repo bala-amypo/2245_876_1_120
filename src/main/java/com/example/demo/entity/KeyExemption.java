@@ -8,7 +8,6 @@ import java.time.Instant;
 public class KeyExemption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
@@ -28,6 +27,7 @@ public class KeyExemption {
 
     public KeyExemption(ApiKey apiKey, String notes, Boolean unlimitedAccess,
                         Integer temporaryExtensionLimit, Instant validUntil) {
+        this.id=id;
         this.apiKey = apiKey;
         this.notes = notes;
         this.unlimitedAccess = unlimitedAccess;

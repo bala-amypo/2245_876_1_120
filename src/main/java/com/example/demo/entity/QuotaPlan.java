@@ -24,6 +24,7 @@ public class QuotaPlan {
 
     public QuotaPlan(String planName, Integer dailyLimit,
                      String description, Boolean active) {
+        this.id=id;
         this.planName = planName;
         this.dailyLimit = dailyLimit;
         this.description = description;
