@@ -1,10 +1,5 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.ApiKey;
 import com.example.demo.entity.QuotaPlan;
 import com.example.demo.exception.BadRequestException;
@@ -12,72 +7,85 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.QuotaPlanRepository;
 import com.example.demo.service.ApiKeyService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApiKeyServiceImpl implements ApiKeyService {
 
-    private final ApiKeyRepository apiKeyRepo;
-    private final QuotaPlanRepository quotaPlanRepo;
+    private final ApiKeyRepository apiKeyRepository;
+    private final QuotaPlanRepository quotaPlanRepository;
 
-    public ApiKeyServiceImpl(ApiKeyRepository apiKeyRepo,
-                             QuotaPlanRepository quotaPlanRepo) {
-        this.apiKeyRepo = apiKeyRepo;
-        this.quotaPlanRepo = quotaPlanRepo;
+    public ApiKeyServiceImpl(ApiKeyRepository apiKeyRepository,
+                             QuotaPlanRepository quotaPlanRepository) {
+        this.apiKeyRepository = apiKeyRepository;
+        this.quotaPlanRepository = quotaPlanRepository;
     }
 
     @Override
     public ApiKey createApiKey(ApiKey apiKey) {
 
-        QuotaPlan plan = quotaPlanRepo.findById(apiKey.getPlan().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Quota plan not found"));
-
-        if (!plan.getActive()) {
-            throw new BadRequestException("Quota plan is inactive");
+        if (apiKeyRepository.findByKeyValue(apiKey.getKeyValue()).isPresent()) {
+            throw new IllegalArgumentException("API key already exists");
         }
 
-        if (apiKeyRepo.findByKeyValue(apiKey.getKeyValue()).isPresent()) {
-            throw new IllegalArgumentException("API Key already exists");
+        QuotaPlan plan = quotaPlanRepository.findById(
+                apiKey.getPlan().getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("QuotaPlan not found"));
+
+        if (!Boolean.TRUE.equals(plan.getActive())) {
+            throw new BadRequestException("QuotaPlan is inactive");
         }
 
-        return apiKeyRepo.save(apiKey);
+        apiKey.setPlan(plan);
+        apiKey.setActive(true);
+
+        return apiKeyRepository.save(apiKey);
     }
 
     @Override
     public ApiKey updateApiKey(Long id, ApiKey apiKey) {
 
-        ApiKey existing = apiKeyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("API Key not found"));
+        ApiKey existing = apiKeyRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ApiKey not found"));
 
         existing.setKeyValue(apiKey.getKeyValue());
+        existing.setOwnerId(apiKey.getOwnerId());
         existing.setPlan(apiKey.getPlan());
         existing.setActive(apiKey.getActive());
 
-        return apiKeyRepo.save(existing);
+        return apiKeyRepository.save(existing);
     }
 
     @Override
     public ApiKey getApiKeyById(Long id) {
-        return apiKeyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("API Key not found"));
+        return apiKeyRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ApiKey not found"));
     }
 
     @Override
     public Optional<ApiKey> getApiKeyByValue(String keyValue) {
-        return apiKeyRepo.findByKeyValue(keyValue);
+        return apiKeyRepository.findByKeyValue(keyValue);
     }
 
     @Override
     public List<ApiKey> getAllApiKeys() {
-        return apiKeyRepo.findAll();
+        return apiKeyRepository.findAll();
     }
 
     @Override
     public void deactivateApiKey(Long id) {
 
-        ApiKey key = apiKeyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("API Key not found"));
+        ApiKey apiKey = apiKeyRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ApiKey not found"));
 
-        key.setActive(false);
-        apiKeyRepo.save(key);
+        apiKey.setActive(false);
+        apiKeyRepository.save(apiKey);
     }
 }
