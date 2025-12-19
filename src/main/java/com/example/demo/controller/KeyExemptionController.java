@@ -13,7 +13,7 @@ import com.example.demo.service.KeyExemptionService;
 public class KeyExemptionController {
 
     @Autowired
-    KeyExemptionService ser;
+    private KeyExemptionService ser;
 
     @PostMapping
     public KeyExemption createExemption(@RequestBody KeyExemption exemption) {

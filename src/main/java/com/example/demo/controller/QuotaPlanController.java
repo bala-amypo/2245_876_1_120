@@ -13,7 +13,7 @@ import com.example.demo.service.QuotaPlanService;
 public class QuotaPlanController {
 
     @Autowired
-    QuotaPlanService ser;
+    private QuotaPlanService ser;
 
     @PostMapping
     public QuotaPlan createPlan(@RequestBody QuotaPlan plan) {

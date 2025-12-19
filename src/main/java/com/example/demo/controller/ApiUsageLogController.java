@@ -13,7 +13,7 @@ import com.example.demo.service.ApiUsageLogService;
 public class ApiUsageLogController {
 
     @Autowired
-    ApiUsageLogService ser;
+    private ApiUsageLogService ser;
 
     @PostMapping
     public ApiUsageLog logUsage(@RequestBody ApiUsageLog log) {

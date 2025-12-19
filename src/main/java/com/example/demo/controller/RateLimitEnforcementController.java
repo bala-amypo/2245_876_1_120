@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import com.example.demo.service.RateLimitEnforcementService;
 public class RateLimitEnforcementController {
 
     @Autowired
-    RateLimitEnforcementService ser;
+    private RateLimitEnforcementService ser;
 
     @PostMapping
     public RateLimitEnforcement createEnforcement(@RequestBody RateLimitEnforcement enforcement) {

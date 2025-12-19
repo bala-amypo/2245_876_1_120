@@ -38,4 +38,6 @@ public class ApiKeyController {
     @PutMapping("/{id}/deactivate")
     public String deactivateApiKey(@PathVariable Long id) {
         ser.deactivateApiKey(id);
-        return "API Key De
+        return "API Key Deactivated";
+    }
+}
