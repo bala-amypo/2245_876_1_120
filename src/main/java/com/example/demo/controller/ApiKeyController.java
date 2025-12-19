@@ -13,7 +13,7 @@ import com.example.demo.service.ApiKeyService;
 public class ApiKeyController {
 
     @Autowired
-    ApiKeyService ser;
+    private ApiKeyService ser;
 
     @PostMapping
     public ApiKey createApiKey(@RequestBody ApiKey key) {
@@ -38,6 +38,4 @@ public class ApiKeyController {
     @PutMapping("/{id}/deactivate")
     public String deactivateApiKey(@PathVariable Long id) {
         ser.deactivateApiKey(id);
-        return "API Key Deactivated";
-    }
-}
+        return "API Key De
