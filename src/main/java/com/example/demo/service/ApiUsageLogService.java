@@ -11,5 +11,5 @@ public interface ApiUsageLogService {
 
     List<ApiUsageLog> getUsageForToday(Long keyId);
 
-    long countRequestsToday(Long keyId);
+    int countRequestsToday(Long keyId);
 }
