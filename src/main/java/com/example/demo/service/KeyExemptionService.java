@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.example.demo.entity.KeyExemption;
 
 public interface KeyExemptionService {
@@ -9,7 +11,7 @@ public interface KeyExemptionService {
 
     KeyExemption updateExemption(Long id, KeyExemption exemption);
 
-    KeyExemption getExemptionByKey(Long keyId);
+    Optional<KeyExemption> getExemptionByKey(Long apiKeyId);
 
     List<KeyExemption> getAllExemptions();
 }
