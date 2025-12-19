@@ -1,37 +1,43 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.KeyExemption;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.service.KeyExemptionService;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entity.KeyExemption;
-import com.example.demo.service.KeyExemptionService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/key-exemptions")
 public class KeyExemptionController {
 
-    @Autowired
-    private KeyExemptionService ser;
+    private final KeyExemptionService service;
+
+    public KeyExemptionController(KeyExemptionService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    public KeyExemption createExemption(@RequestBody KeyExemption exemption) {
-        return ser.createExemption(exemption);
+    public KeyExemption create(@RequestBody KeyExemption exemption) {
+        return service.createExemption(exemption);
     }
 
     @PutMapping("/{id}")
-    public KeyExemption updateExemption(@PathVariable Long id, @RequestBody KeyExemption exemption) {
-        return ser.updateExemption(id, exemption);
+    public KeyExemption update(
+            @PathVariable Long id,
+            @RequestBody KeyExemption exemption) {
+        return service.updateExemption(id, exemption);
     }
 
     @GetMapping("/key/{keyId}")
     public KeyExemption getByKey(@PathVariable Long keyId) {
-        return ser.getExemptionByKey(keyId);
+        return service.getExemptionByKey(keyId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("KeyExemption not found"));
     }
 
     @GetMapping
     public List<KeyExemption> getAll() {
-        return ser.getAllExemptions();
+        return service.getAllExemptions();
     }
 }
