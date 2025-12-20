@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "api_keys")
@@ -11,58 +11,48 @@ public class ApiKey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String keyValue;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_account_id")
-    private UserAccount userAccount;
+    private Long ownerId;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    @ManyToOne
+    @JoinColumn(name = "plan_id")
+    private QuotaPlan plan;
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Boolean active = true;
 
-    // ===== getters & setters =====
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Long getId() {
-        return id;
-    }
+    public ApiKey() {}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getKeyValue() {
-        return keyValue;
-    }
-
-    public void setKeyValue(String keyValue) {
+    public ApiKey(String keyValue, Long ownerId, QuotaPlan plan, Boolean active) {
         this.keyValue = keyValue;
-    }
-
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
+        this.ownerId = ownerId;
+        this.plan = plan;
         this.active = active;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
+    // Getters & Setters
+    public Long getId() { return id; }
+    public String getKeyValue() { return keyValue; }
+    public void setKeyValue(String keyValue) { this.keyValue = keyValue; }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
+    public Long getOwnerId() { return ownerId; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+
+    public QuotaPlan getPlan() { return plan; }
+    public void setPlan(QuotaPlan plan) { this.plan = plan; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
