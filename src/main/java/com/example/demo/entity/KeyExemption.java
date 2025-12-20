@@ -11,69 +11,27 @@ public class KeyExemption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "api_key_id")
-    private ApiKey apiKey;
-
-    @Column
-    private String notes;
+    @Column(nullable = false)
+    private Long apiKeyId;
 
     @Column(nullable = false)
-    private Boolean unlimitedAccess = false;
+    private String reason;
 
-    @Column
-    private Integer temporaryExtensionLimit;
+    private LocalDateTime exemptedAt = LocalDateTime.now();
 
-    @Column(nullable = false)
-    private LocalDateTime validUntil;
+    public KeyExemption() {}
 
-    // ===== getters & setters =====
-
-    public Long getId() {
-        return id;
+    public KeyExemption(Long apiKeyId, String reason) {
+        this.apiKeyId = apiKeyId;
+        this.reason = reason;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public Long getApiKeyId() { return apiKeyId; }
+    public String getReason() { return reason; }
+    public LocalDateTime getExemptedAt() { return exemptedAt; }
 
-    public ApiKey getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(ApiKey apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Boolean getUnlimitedAccess() {
-        return unlimitedAccess;
-    }
-
-    public void setUnlimitedAccess(Boolean unlimitedAccess) {
-        this.unlimitedAccess = unlimitedAccess;
-    }
-
-    public Integer getTemporaryExtensionLimit() {
-        return temporaryExtensionLimit;
-    }
-
-    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) {
-        this.temporaryExtensionLimit = temporaryExtensionLimit;
-    }
-
-    public LocalDateTime getValidUntil() {
-        return validUntil;
-    }
-
-    public void setValidUntil(LocalDateTime validUntil) {
-        this.validUntil = validUntil;
-    }
+    public void setApiKeyId(Long apiKeyId) { this.apiKeyId = apiKeyId; }
+    public void setReason(String reason) { this.reason = reason; }
+    public void setExemptedAt(LocalDateTime exemptedAt) { this.exemptedAt = exemptedAt; }
 }
