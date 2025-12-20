@@ -20,7 +20,7 @@ public class QuotaPlan {
     private String description;
 
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
 
     // ===== getters & setters =====
 
@@ -56,11 +56,11 @@ public class QuotaPlan {
         this.description = description;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }
