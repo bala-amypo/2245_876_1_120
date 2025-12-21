@@ -1,9 +1,15 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import lombok.Getter;
+import lombok.Setter;
 import java.sql.Timestamp;
+
 @Entity
+@Getter
+@Setter
 public class KeyExemption {
 
     @Id
