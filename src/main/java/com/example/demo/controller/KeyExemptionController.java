@@ -1,13 +1,3 @@
-package com.example.demo.controller;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.entity.KeyExemption;
-import com.example.demo.service.KeyExemptionService;
-
 @RestController
 @RequestMapping("/api/key-exemptions")
 public class KeyExemptionController {
@@ -18,22 +8,31 @@ public class KeyExemptionController {
         this.exemptionService = exemptionService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Create a key exemption",
+        required = true
+    )
     public KeyExemption createExemption(
-            @RequestBody KeyExemption exemption) {
+            @org.springframework.web.bind.annotation.RequestBody
+            KeyExemption exemption) {
+
         return exemptionService.createExemption(exemption);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "application/json")
     public KeyExemption updateExemption(
             @PathVariable Long id,
-            @RequestBody KeyExemption exemption) {
+            @org.springframework.web.bind.annotation.RequestBody
+            KeyExemption exemption) {
+
         return exemptionService.updateExemption(id, exemption);
     }
 
     @GetMapping("/key/{keyId}")
     public Optional<KeyExemption> getExemptionByKey(
             @PathVariable Long keyId) {
+
         return exemptionService.getExemptionByKey(keyId);
     }
 
