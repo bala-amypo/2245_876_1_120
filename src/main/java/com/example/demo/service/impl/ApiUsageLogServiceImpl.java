@@ -60,7 +60,11 @@ public class ApiUsageLogServiceImpl implements ApiUsageLogService {
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
 
-        return usageRepository.findForKeyBetween(keyId, start, end);
+        return usageRepository.findForKeyBetween(
+                keyId,
+                start.getEpochSecond(),
+                end.getEpochSecond()
+        );
     }
 
     @Override
@@ -75,6 +79,10 @@ public class ApiUsageLogServiceImpl implements ApiUsageLogService {
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
 
-        return usageRepository.countForKeyBetween(keyId, start, end);
+        return usageRepository.countForKeyBetween(
+                keyId,
+                start.getEpochSecond(),
+                end.getEpochSecond()
+        );
     }
 }
