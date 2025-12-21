@@ -1,3 +1,9 @@
+package com.example.demo.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "rate_limit_enforcements")
 public class RateLimitEnforcement {
@@ -8,7 +14,7 @@ public class RateLimitEnforcement {
 
     @ManyToOne
     @JoinColumn(name = "api_key_id", nullable = false)
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({
+    @JsonIgnoreProperties({
         "plan",
         "createdAt",
         "updatedAt"
@@ -25,14 +31,41 @@ public class RateLimitEnforcement {
 
     public RateLimitEnforcement() {}
 
-    public Long getId() { return id; }
-    public ApiKey getApiKey() { return apiKey; }
-    public LocalDateTime getBlockedAt() { return blockedAt; }
-    public Integer getLimitExceededBy() { return limitExceededBy; }
-    public String getMessage() { return message; }
+    // ===== GETTERS =====
+    public Long getId() {
+        return id;
+    }
 
-    public void setApiKey(ApiKey apiKey) { this.apiKey = apiKey; }
-    public void setBlockedAt(LocalDateTime blockedAt) { this.blockedAt = blockedAt; }
-    public void setLimitExceededBy(Integer limitExceededBy) { this.limitExceededBy = limitExceededBy; }
-    public void setMessage(String message) { this.message = message; }
+    public ApiKey getApiKey() {
+        return apiKey;
+    }
+
+    public LocalDateTime getBlockedAt() {
+        return blockedAt;
+    }
+
+    public Integer getLimitExceededBy() {
+        return limitExceededBy;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    // ===== SETTERS =====
+    public void setApiKey(ApiKey apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void setBlockedAt(LocalDateTime blockedAt) {
+        this.blockedAt = blockedAt;
+    }
+
+    public void setLimitExceededBy(Integer limitExceededBy) {
+        this.limitExceededBy = limitExceededBy;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

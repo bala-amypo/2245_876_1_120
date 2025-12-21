@@ -28,14 +28,20 @@ public class RateLimitEnforcementServiceImpl
     @Override
     public RateLimitEnforcement createEnforcement(RateLimitEnforcement enforcement) {
 
+        if (enforcement.getApiKey() == null || enforcement.getApiKey().getId() == null) {
+            throw new BadRequestException("ApiKey id is required");
+        }
+
+        if (enforcement.getBlockedAt() == null) {
+            throw new BadRequestException("blockedAt is required");
+        }
+
         if (enforcement.getLimitExceededBy() == null ||
             enforcement.getLimitExceededBy() < 1) {
             throw new BadRequestException("limitExceededBy must be >= 1");
         }
 
-        Long apiKeyId = enforcement.getApiKey().getId();
-
-        ApiKey apiKey = apiKeyRepository.findById(apiKeyId)
+        ApiKey apiKey = apiKeyRepository.findById(enforcement.getApiKey().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("ApiKey not found"));
 
         enforcement.setApiKey(apiKey);
