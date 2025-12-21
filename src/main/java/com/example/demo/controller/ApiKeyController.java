@@ -18,16 +18,26 @@ public class ApiKeyController {
 
     @PostMapping
     public ApiKey create(@RequestBody ApiKey apiKey) {
-        return service.create(apiKey);
+        return service.createApiKey(apiKey);
+    }
+
+    @PutMapping("/{id}")
+    public ApiKey update(@PathVariable Long id, @RequestBody ApiKey apiKey) {
+        return service.updateApiKey(id, apiKey);
     }
 
     @GetMapping("/{id}")
-    public ApiKey get(@PathVariable Long id) {
-        return service.getById(id);
+    public ApiKey getById(@PathVariable Long id) {
+        return service.getApiKeyById(id);
     }
 
     @GetMapping
     public List<ApiKey> getAll() {
-        return service.getAll();
+        return service.getAllApiKeys();
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public void deactivate(@PathVariable Long id) {
+        service.deactivateApiKey(id);
     }
 }
