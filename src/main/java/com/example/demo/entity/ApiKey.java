@@ -2,6 +2,9 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "api_keys")
@@ -26,6 +29,11 @@ public class ApiKey {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // 🔥 REQUIRED to prevent 500 error
+    @OneToMany(mappedBy = "apiKey")
+    @JsonIgnore
+    private List<RateLimitEnforcement> rateLimitEnforcements;
 
     public ApiKey() {}
 
