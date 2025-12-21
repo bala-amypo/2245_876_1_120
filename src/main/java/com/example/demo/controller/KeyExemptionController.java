@@ -21,19 +21,18 @@ public class KeyExemptionController {
         return service.createExemption(exemption);
     }
 
-    @PutMapping("/{id}")
-    public KeyExemption update(@PathVariable Long id, @RequestBody KeyExemption exemption) {
-        return service.updateExemption(id, exemption);
-    }
-
-    @GetMapping("/key/{keyId}")
-    public KeyExemption getByKey(@PathVariable Long keyId) {
-        return service.getExemptionByKey(keyId)
-                .orElseThrow(() -> new RuntimeException("KeyExemption not found"));
+    @GetMapping("/{id}")
+    public KeyExemption getById(@PathVariable Long id) {
+        return service.getExemptionById(id);
     }
 
     @GetMapping
     public List<KeyExemption> getAll() {
         return service.getAllExemptions();
+    }
+
+    @PutMapping("/{id}")
+    public KeyExemption update(@PathVariable Long id, @RequestBody KeyExemption exemption) {
+        return service.updateExemption(id, exemption);
     }
 }
