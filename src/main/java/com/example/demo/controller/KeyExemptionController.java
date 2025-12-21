@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.*;
 
-import io.swagger.v3.oas.annotations.Operation;
-
 import com.example.demo.entity.KeyExemption;
 import com.example.demo.service.KeyExemptionService;
 
@@ -20,29 +18,24 @@ public class KeyExemptionController {
         this.exemptionService = exemptionService;
     }
 
-    @Operation(summary = "Create a key exemption")
-    @PostMapping
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public KeyExemption createExemption(
             @RequestBody KeyExemption exemption) {
         return exemptionService.createExemption(exemption);
     }
 
-    @Operation(summary = "Update a key exemption")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public KeyExemption updateExemption(
             @PathVariable Long id,
             @RequestBody KeyExemption exemption) {
         return exemptionService.updateExemption(id, exemption);
     }
 
-    @Operation(summary = "Get exemption for API key")
     @GetMapping("/key/{keyId}")
-    public Optional<KeyExemption> getExemptionByKey(
-            @PathVariable Long keyId) {
+    public Optional<KeyExemption> getExemptionByKey(@PathVariable Long keyId) {
         return exemptionService.getExemptionByKey(keyId);
     }
 
-    @Operation(summary = "Get all exemptions")
     @GetMapping
     public List<KeyExemption> getAllExemptions() {
         return exemptionService.getAllExemptions();
