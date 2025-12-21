@@ -17,8 +17,7 @@ public class KeyExemption {
 
     private String notes;
 
-    @Column(nullable = false)
-    private Boolean unlimitedAccess = false;
+    private Boolean unlimitedAccess;
 
     private Integer temporaryExtensionLimit;
 
@@ -26,11 +25,8 @@ public class KeyExemption {
 
     public KeyExemption() {}
 
-    public KeyExemption(ApiKey apiKey,
-                        String notes,
-                        Boolean unlimitedAccess,
-                        Integer temporaryExtensionLimit,
-                        LocalDateTime validUntil) {
+    public KeyExemption(ApiKey apiKey, String notes, Boolean unlimitedAccess,
+                        Integer temporaryExtensionLimit, LocalDateTime validUntil) {
         this.apiKey = apiKey;
         this.notes = notes;
         this.unlimitedAccess = unlimitedAccess;
@@ -38,7 +34,7 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // ===== GETTERS =====
+    // ✅ GETTERS
     public Long getId() {
         return id;
     }
@@ -63,7 +59,7 @@ public class KeyExemption {
         return validUntil;
     }
 
-    // ===== SETTERS =====
+    // ✅ SETTERS
     public void setApiKey(ApiKey apiKey) {
         this.apiKey = apiKey;
     }

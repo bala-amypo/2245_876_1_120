@@ -32,11 +32,6 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return repository.findAll();
     }
 
-    @Override
-    public void deleteExemption(Long id) {
-        KeyExemption exemption = getExemptionById(id);
-        repository.delete(exemption);
-    }
 
     @Override
 public KeyExemption updateExemption(Long id, KeyExemption exemption) {

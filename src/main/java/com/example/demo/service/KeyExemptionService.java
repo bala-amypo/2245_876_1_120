@@ -11,8 +11,6 @@ public interface KeyExemptionService {
 
     List<KeyExemption> getAllExemptions();
 
-    void deleteExemption(Long id);
-
     KeyExemption updateExemption(Long id, KeyExemption exemption);
 
 }

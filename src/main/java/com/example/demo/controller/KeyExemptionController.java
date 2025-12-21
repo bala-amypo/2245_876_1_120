@@ -30,11 +30,6 @@ public class KeyExemptionController {
         return service.getAllExemptions();
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.deleteExemption(id);
-    }
-
     @PutMapping("/{id}")
 public KeyExemption update(@PathVariable Long id, @RequestBody KeyExemption exemption) {
     return service.updateExemption(id, exemption);
