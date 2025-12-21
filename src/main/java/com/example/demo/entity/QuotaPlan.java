@@ -35,10 +35,23 @@ public class QuotaPlan {
         this.active = active != null ? active : true;
     }
 
-    // Getters & Setters
+    // ===== REQUIRED BY TESTS =====
+
     public Long getId() {
         return id;
     }
+
+    // Tests call setId(...)
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // Tests call isActive()
+    public boolean isActive() {
+        return Boolean.TRUE.equals(this.active);
+    }
+
+    // ===== STANDARD GETTERS/SETTERS =====
 
     public String getPlanName() {
         return planName;
