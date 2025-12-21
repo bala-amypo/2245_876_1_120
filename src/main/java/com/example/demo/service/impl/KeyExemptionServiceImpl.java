@@ -29,20 +29,17 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
     @Override
     public KeyExemption createExemption(KeyExemption exemption) {
 
-        // Validate API key
         if (exemption.getApiKey() == null || exemption.getApiKey().getId() == null) {
             throw new BadRequestException("ApiKey id is required");
         }
 
-        // Validate extension limit
         if (exemption.getTemporaryExtensionLimit() != null &&
-                exemption.getTemporaryExtensionLimit() < 0) {
+            exemption.getTemporaryExtensionLimit() < 0) {
             throw new BadRequestException("Temporary extension limit must be >= 0");
         }
 
-        // Validate expiry
         if (exemption.getValidUntil() == null ||
-                exemption.getValidUntil().isBefore(LocalDateTime.now())) {
+            exemption.getValidUntil().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("validUntil must be in the future");
         }
 
@@ -67,7 +64,6 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
     @Override
     public KeyExemption updateExemption(Long id, KeyExemption updated) {
-
         KeyExemption existing = getExemptionById(id);
 
         existing.setNotes(updated.getNotes());
