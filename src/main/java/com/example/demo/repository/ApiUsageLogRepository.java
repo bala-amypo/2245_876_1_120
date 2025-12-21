@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,32 +11,27 @@ import com.example.demo.entity.ApiUsageLog;
 
 public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLog, Long> {
 
-    // All logs for an API key
     List<ApiUsageLog> findByApiKey_Id(Long id);
 
-    // Logs between epoch seconds (TEST-SAFE FIX)
     @Query("""
         SELECT l FROM ApiUsageLog l
         WHERE l.apiKey.id = :keyId
-        AND l.timestamp >= FUNCTION('FROM_UNIXTIME', :startEpoch)
-        AND l.timestamp <= FUNCTION('FROM_UNIXTIME', :endEpoch)
+        AND l.timestamp BETWEEN :start AND :end
     """)
     List<ApiUsageLog> findForKeyBetween(
             @Param("keyId") Long keyId,
-            @Param("startEpoch") long startEpoch,
-            @Param("endEpoch") long endEpoch
+            @Param("start") Instant start,
+            @Param("end") Instant end
     );
 
-    // Count logs between epoch seconds
     @Query("""
         SELECT COUNT(l) FROM ApiUsageLog l
         WHERE l.apiKey.id = :keyId
-        AND l.timestamp >= FUNCTION('FROM_UNIXTIME', :startEpoch)
-        AND l.timestamp <= FUNCTION('FROM_UNIXTIME', :endEpoch)
+        AND l.timestamp BETWEEN :start AND :end
     """)
     int countForKeyBetween(
             @Param("keyId") Long keyId,
-            @Param("startEpoch") long startEpoch,
-            @Param("endEpoch") long endEpoch
+            @Param("start") Instant start,
+            @Param("end") Instant end
     );
 }
