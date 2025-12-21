@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entity.ApiKey;
 import com.example.demo.entity.KeyExemption;
@@ -16,67 +15,79 @@ import com.example.demo.repository.KeyExemptionRepository;
 import com.example.demo.service.KeyExemptionService;
 
 @Service
-@Transactional
 public class KeyExemptionServiceImpl implements KeyExemptionService {
 
-    private final KeyExemptionRepository repository;
+    private final KeyExemptionRepository exemptionRepository;
     private final ApiKeyRepository apiKeyRepository;
 
-    public KeyExemptionServiceImpl(KeyExemptionRepository repository,
-                                   ApiKeyRepository apiKeyRepository) {
-        this.repository = repository;
+    public KeyExemptionServiceImpl(
+            KeyExemptionRepository exemptionRepository,
+            ApiKeyRepository apiKeyRepository) {
+        this.exemptionRepository = exemptionRepository;
         this.apiKeyRepository = apiKeyRepository;
     }
 
     @Override
     public KeyExemption createExemption(KeyExemption exemption) {
 
-        if (exemption.getApiKey() == null || exemption.getApiKey().getId() == null) {
-            throw new BadRequestException("apiKey.id is required");
+        if (exemption.getTemporaryExtensionLimit() != null
+                && exemption.getTemporaryExtensionLimit() < 0) {
+            throw new BadRequestException(
+                    "temporaryExtensionLimit must be >= 0");
         }
 
-        if (exemption.getValidUntil() == null) {
-            throw new BadRequestException("validUntil is required");
+        if (exemption.getValidUntil() != null
+                && exemption.getValidUntil().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException(
+                    "validUntil must be in the future");
         }
 
-        ApiKey apiKey = apiKeyRepository.findById(
-                exemption.getApiKey().getId()
-        ).orElseThrow(() -> new ResourceNotFoundException("ApiKey not found"));
+        ApiKey apiKey = apiKeyRepository
+                .findById(exemption.getApiKey().getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ApiKey not found"));
 
         exemption.setApiKey(apiKey);
 
-        if (exemption.getUnlimitedAccess() == null) {
-            exemption.setUnlimitedAccess(false);
-        }
-
-        if (exemption.getValidUntil().isBefore(LocalDateTime.now())) {
-            throw new BadRequestException("validUntil cannot be in the past");
-        }
-
-        return repository.save(exemption);
+        return exemptionRepository.save(exemption);
     }
 
     @Override
     public KeyExemption updateExemption(Long id, KeyExemption exemption) {
 
-        KeyExemption existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("KeyExemption not found"));
+        KeyExemption existing = exemptionRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "KeyExemption not found"));
+
+        if (exemption.getTemporaryExtensionLimit() != null
+                && exemption.getTemporaryExtensionLimit() < 0) {
+            throw new BadRequestException(
+                    "temporaryExtensionLimit must be >= 0");
+        }
+
+        if (exemption.getValidUntil() != null
+                && exemption.getValidUntil().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException(
+                    "validUntil must be in the future");
+        }
 
         existing.setNotes(exemption.getNotes());
         existing.setUnlimitedAccess(exemption.getUnlimitedAccess());
-        existing.setTemporaryExtensionLimit(exemption.getTemporaryExtensionLimit());
+        existing.setTemporaryExtensionLimit(
+                exemption.getTemporaryExtensionLimit());
         existing.setValidUntil(exemption.getValidUntil());
 
-        return repository.save(existing);
+        return exemptionRepository.save(existing);
     }
 
     @Override
-    public Optional<KeyExemption> getExemptionByKey(Long keyId) {
-        return repository.findByApiKey_Id(keyId);
+    public Optional<KeyExemption> getExemptionByKey(Long apiKeyId) {
+        return exemptionRepository.findByApiKey_Id(apiKeyId);
     }
 
     @Override
     public List<KeyExemption> getAllExemptions() {
-        return repository.findAll();
+        return exemptionRepository.findAll();
     }
 }
