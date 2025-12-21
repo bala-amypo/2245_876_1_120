@@ -28,21 +28,21 @@ public class ApiUsageLog {
     public ApiUsageLog() {
     }
 
-    // ✅ ORIGINAL constructor (spec-compliant)
+    // ✅ SPEC-COMPLIANT constructor
     public ApiUsageLog(ApiKey apiKey, String endpoint, LocalDateTime timestamp) {
         this.apiKey = apiKey;
         this.endpoint = endpoint;
         this.timestamp = timestamp;
     }
 
-    // ✅ NEW constructor (TEST-COMPATIBLE)
+    // ✅ TEST-COMPATIBLE constructor
     public ApiUsageLog(ApiKey apiKey, String endpoint, Instant timestamp) {
         this.apiKey = apiKey;
         this.endpoint = endpoint;
         this.timestamp = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
     }
 
-    // Getters & setters
+    // Getters
     public Long getId() {
         return id;
     }
@@ -51,23 +51,30 @@ public class ApiUsageLog {
         return apiKey;
     }
 
-    public void setApiKey(ApiKey apiKey) {
-        this.apiKey = apiKey;
-    }
-
     public String getEndpoint() {
         return endpoint;
-    }
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
     }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
+    // Setters
+    public void setApiKey(ApiKey apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    // ✅ ORIGINAL setter
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    // ✅ THIS IS THE LINE YOUR TESTS REQUIRE
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
     }
 }
