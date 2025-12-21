@@ -9,6 +9,12 @@ public class RegisterRequestDto {
     public RegisterRequestDto() {
     }
 
+    public RegisterRequestDto(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     public String getEmail() {
         return email;
     }
