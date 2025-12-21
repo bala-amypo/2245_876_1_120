@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -30,7 +28,7 @@ public class KeyExemption {
     @Column(nullable = false)
     private LocalDateTime validUntil;
 
-    // ✅ No-arg constructor (REQUIRED)
+    // ✅ no-arg constructor
     public KeyExemption() {
     }
 
@@ -47,7 +45,7 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // ✅ TEST-COMPATIBLE constructor
+    // ✅ TEST-COMPATIBLE constructor (THIS FIXES LINE 469)
     public KeyExemption(ApiKey apiKey,
                         String notes,
                         Boolean unlimitedAccess,
@@ -61,7 +59,7 @@ public class KeyExemption {
                 LocalDateTime.ofInstant(validUntil, ZoneId.systemDefault());
     }
 
-    // ===== GETTERS =====
+    // Getters
     public Long getId() {
         return id;
     }
@@ -86,7 +84,7 @@ public class KeyExemption {
         return validUntil;
     }
 
-    // ===== SETTERS =====
+    // Setters
     public void setApiKey(ApiKey apiKey) {
         this.apiKey = apiKey;
     }
@@ -103,13 +101,12 @@ public class KeyExemption {
         this.temporaryExtensionLimit = temporaryExtensionLimit;
     }
 
-    // ✅ SPEC setter (Swagger will use THIS)
+    // ✅ SPEC setter
     public void setValidUntil(LocalDateTime validUntil) {
         this.validUntil = validUntil;
     }
 
-    // ✅ REQUIRED for tests but HIDDEN from Swagger
-    @JsonIgnore
+    // ✅ REQUIRED for tests
     public void setValidUntil(Instant validUntil) {
         this.validUntil =
                 LocalDateTime.ofInstant(validUntil, ZoneId.systemDefault());
