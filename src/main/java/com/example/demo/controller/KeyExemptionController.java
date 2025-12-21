@@ -18,22 +18,16 @@ public class KeyExemptionController {
 
     @PostMapping
     public KeyExemption create(@RequestBody KeyExemption exemption) {
-        return service.createExemption(exemption);
-    }
-
-    @PutMapping("/{id}")
-    public KeyExemption update(@PathVariable Long id,
-                               @RequestBody KeyExemption exemption) {
-        return service.updateExemption(id, exemption);
-    }
-
-    @GetMapping("/key/{keyId}")
-    public KeyExemption getByApiKey(@PathVariable Long keyId) {
-        return service.getExemptionByKey(keyId);
+        return service.create(exemption);
     }
 
     @GetMapping
     public List<KeyExemption> getAll() {
-        return service.getAllExemptions();
+        return service.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public KeyExemption getById(@PathVariable Long id) {
+        return service.getById(id);
     }
 }

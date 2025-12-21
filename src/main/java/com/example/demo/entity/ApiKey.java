@@ -1,10 +1,12 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "api_keys")
+@JsonIgnoreProperties({"plan", "createdAt", "updatedAt"})
 public class ApiKey {
 
     @Id
@@ -27,17 +29,9 @@ public class ApiKey {
 
     public ApiKey() {}
 
-    public ApiKey(String keyValue, Long ownerId, QuotaPlan plan, Boolean active) {
-        this.keyValue = keyValue;
-        this.ownerId = ownerId;
-        this.plan = plan;
-        this.active = active;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    // Getters & Setters
+    // ===== getters & setters =====
     public Long getId() { return id; }
+
     public String getKeyValue() { return keyValue; }
     public void setKeyValue(String keyValue) { this.keyValue = keyValue; }
 
