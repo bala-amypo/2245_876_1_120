@@ -2,7 +2,6 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.ApiKey;
 import com.example.demo.entity.KeyExemption;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ApiKeyRepository;
 import com.example.demo.repository.KeyExemptionRepository;
 import com.example.demo.service.KeyExemptionService;
@@ -23,40 +22,29 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
     }
 
     @Override
-    public KeyExemption createExemption(KeyExemption exemption) {
-
+    public KeyExemption create(KeyExemption exemption) {
         Long apiKeyId = exemption.getApiKey().getId();
 
         ApiKey apiKey = apiKeyRepository.findById(apiKeyId)
-                .orElseThrow(() -> new ResourceNotFoundException("API Key not found"));
+                .orElseThrow(() -> new RuntimeException("ApiKey not found"));
 
         exemption.setApiKey(apiKey);
         return repository.save(exemption);
     }
 
     @Override
-    public KeyExemption updateExemption(Long id, KeyExemption data) {
-
-        KeyExemption existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Exemption not found"));
-
-        existing.setNotes(data.getNotes());
-        existing.setUnlimitedAccess(data.getUnlimitedAccess());
-        existing.setTemporaryExtensionLimit(data.getTemporaryExtensionLimit());
-        existing.setValidUntil(data.getValidUntil());
-
-        return repository.save(existing);
+    public KeyExemption getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("KeyExemption not found"));
     }
 
     @Override
-    public KeyExemption getExemptionByKey(Long apiKeyId) {
-        return repository.findByApiKey_Id(apiKeyId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("No exemption for API key " + apiKeyId));
-    }
-
-    @Override
-    public List<KeyExemption> getAllExemptions() {
+    public List<KeyExemption> getAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<KeyExemption> getByApiKeyId(Long apiKeyId) {
+        return repository.findByApiKey_Id(apiKeyId);
     }
 }
