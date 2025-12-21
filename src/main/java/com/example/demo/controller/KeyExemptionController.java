@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import com.example.demo.entity.KeyExemption;
 import com.example.demo.service.KeyExemptionService;
 
@@ -18,50 +21,32 @@ public class KeyExemptionController {
         this.exemptionService = exemptionService;
     }
 
-    // =========================
-    // CREATE EXEMPTION
-    // =========================
-    @PostMapping(consumes = "application/json")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Create a Key Exemption",
-        required = true
-    )
+    @Operation(summary = "Create a key exemption")
+    @PostMapping
     public KeyExemption createExemption(
+            @RequestBody(description = "Key exemption details", required = true)
             @org.springframework.web.bind.annotation.RequestBody
             KeyExemption exemption) {
-
         return exemptionService.createExemption(exemption);
     }
 
-    // =========================
-    // UPDATE EXEMPTION
-    // =========================
-    @PutMapping(value = "/{id}", consumes = "application/json")
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Update an existing Key Exemption",
-        required = true
-    )
+    @Operation(summary = "Update a key exemption")
+    @PutMapping("/{id}")
     public KeyExemption updateExemption(
             @PathVariable Long id,
+            @RequestBody(description = "Updated exemption details", required = true)
             @org.springframework.web.bind.annotation.RequestBody
             KeyExemption exemption) {
-
         return exemptionService.updateExemption(id, exemption);
     }
 
-    // =========================
-    // GET EXEMPTION BY API KEY
-    // =========================
+    @Operation(summary = "Get exemption for API key")
     @GetMapping("/key/{keyId}")
-    public Optional<KeyExemption> getExemptionByKey(
-            @PathVariable Long keyId) {
-
+    public Optional<KeyExemption> getExemptionByKey(@PathVariable Long keyId) {
         return exemptionService.getExemptionByKey(keyId);
     }
 
-    // =========================
-    // GET ALL EXEMPTIONS
-    // =========================
+    @Operation(summary = "Get all exemptions")
     @GetMapping
     public List<KeyExemption> getAllExemptions() {
         return exemptionService.getAllExemptions();
