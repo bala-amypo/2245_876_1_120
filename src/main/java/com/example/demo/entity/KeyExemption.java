@@ -34,49 +34,18 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // ✅ GETTERS
-    public Long getId() {
-        return id;
-    }
+    // Getters
+    public Long getId() { return id; }
+    public ApiKey getApiKey() { return apiKey; }
+    public String getNotes() { return notes; }
+    public Boolean getUnlimitedAccess() { return unlimitedAccess; }
+    public Integer getTemporaryExtensionLimit() { return temporaryExtensionLimit; }
+    public LocalDateTime getValidUntil() { return validUntil; }
 
-    public ApiKey getApiKey() {
-        return apiKey;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public Boolean getUnlimitedAccess() {
-        return unlimitedAccess;
-    }
-
-    public Integer getTemporaryExtensionLimit() {
-        return temporaryExtensionLimit;
-    }
-
-    public LocalDateTime getValidUntil() {
-        return validUntil;
-    }
-
-    // ✅ SETTERS
-    public void setApiKey(ApiKey apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public void setUnlimitedAccess(Boolean unlimitedAccess) {
-        this.unlimitedAccess = unlimitedAccess;
-    }
-
-    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) {
-        this.temporaryExtensionLimit = temporaryExtensionLimit;
-    }
-
-    public void setValidUntil(LocalDateTime validUntil) {
-        this.validUntil = validUntil;
-    }
+    // Setters
+    public void setApiKey(ApiKey apiKey) { this.apiKey = apiKey; }
+    public void setNotes(String notes) { this.notes = notes; }
+    public void setUnlimitedAccess(Boolean unlimitedAccess) { this.unlimitedAccess = unlimitedAccess; }
+    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) { this.temporaryExtensionLimit = temporaryExtensionLimit; }
+    public void setValidUntil(LocalDateTime validUntil) { this.validUntil = validUntil; }
 }
