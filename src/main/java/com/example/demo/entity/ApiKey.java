@@ -1,12 +1,10 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "api_keys")
-@JsonIgnoreProperties({"plan", "createdAt", "updatedAt"})
 public class ApiKey {
 
     @Id
@@ -16,12 +14,14 @@ public class ApiKey {
     @Column(unique = true, nullable = false)
     private String keyValue;
 
+    @Column(nullable = false)
     private Long ownerId;
 
     @ManyToOne
-    @JoinColumn(name = "plan_id")
+    @JoinColumn(name = "plan_id", nullable = false)
     private QuotaPlan plan;
 
+    @Column(nullable = false)
     private Boolean active = true;
 
     private LocalDateTime createdAt;
@@ -29,57 +29,34 @@ public class ApiKey {
 
     public ApiKey() {}
 
-    /* ================= GETTERS & SETTERS ================= */
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getKeyValue() {
-        return keyValue;
-    }
-
-    public void setKeyValue(String keyValue) {
+    public ApiKey(String keyValue, Long ownerId, QuotaPlan plan, Boolean active) {
         this.keyValue = keyValue;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public QuotaPlan getPlan() {
-        return plan;
-    }
-
-    public void setPlan(QuotaPlan plan) {
         this.plan = plan;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    @PrePersist
+    void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public Long getId() { return id; }
+    public String getKeyValue() { return keyValue; }
+    public Long getOwnerId() { return ownerId; }
+    public QuotaPlan getPlan() { return plan; }
+    public Boolean getActive() { return active; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public void setKeyValue(String keyValue) { this.keyValue = keyValue; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+    public void setPlan(QuotaPlan plan) { this.plan = plan; }
+    public void setActive(Boolean active) { this.active = active; }
 }
