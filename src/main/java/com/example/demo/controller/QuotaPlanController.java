@@ -35,4 +35,10 @@ public class QuotaPlanController {
     public void deactivate(@PathVariable Long id) {
         service.deactivateQuotaPlan(id);
     }
+
+    @PutMapping("/{id}")
+public QuotaPlan update(@PathVariable Long id, @RequestBody QuotaPlan plan) {
+    return service.updateQuotaPlan(id, plan);
+}
+
 }

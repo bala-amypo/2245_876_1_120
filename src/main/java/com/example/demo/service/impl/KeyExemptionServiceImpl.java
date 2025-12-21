@@ -37,4 +37,26 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         KeyExemption exemption = getExemptionById(id);
         repository.delete(exemption);
     }
+
+    @Override
+public KeyExemption updateExemption(Long id, KeyExemption exemption) {
+    KeyExemption existing = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("KeyExemption not found"));
+
+    if (exemption.getTemporaryExtensionLimit() != null && exemption.getTemporaryExtensionLimit() < 0) {
+        throw new IllegalArgumentException("Temporary extension must be >= 0");
+    }
+
+    if (exemption.getValidUntil() != null && exemption.getValidUntil().isBefore(java.time.LocalDateTime.now())) {
+        throw new IllegalArgumentException("ValidUntil must be in the future");
+    }
+
+    existing.setNotes(exemption.getNotes());
+    existing.setUnlimitedAccess(exemption.getUnlimitedAccess());
+    existing.setTemporaryExtensionLimit(exemption.getTemporaryExtensionLimit());
+    existing.setValidUntil(exemption.getValidUntil());
+
+    return repository.save(existing);
+}
+
 }

@@ -44,4 +44,21 @@ public class QuotaPlanServiceImpl implements QuotaPlanService {
         plan.setActive(false);
         repository.save(plan);
     }
+    @Override
+public QuotaPlan updateQuotaPlan(Long id, QuotaPlan plan) {
+    QuotaPlan existing = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("QuotaPlan not found"));
+    if (plan.getDailyLimit() != null && plan.getDailyLimit() > 0) {
+        existing.setDailyLimit(plan.getDailyLimit());
+    } else {
+        throw new IllegalArgumentException("Daily limit must be greater than 0");
+    }
+    if (plan.getPlanName() != null && !plan.getPlanName().isEmpty()) {
+        existing.setPlanName(plan.getPlanName());
+    }
+    existing.setDescription(plan.getDescription());
+    existing.setActive(plan.getActive());
+    return repository.save(existing);
+}
+
 }

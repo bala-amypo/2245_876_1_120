@@ -12,4 +12,7 @@ public interface QuotaPlanService {
     List<QuotaPlan> getAllPlans();
 
     void deactivateQuotaPlan(Long id);
+
+    QuotaPlan updateQuotaPlan(Long id, QuotaPlan plan);
+
 }
