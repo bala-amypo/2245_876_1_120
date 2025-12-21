@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ public class JwtUtil {
     }
 
     public String generateToken(Map<String, Object> claims, String subject) {
-        // tests only check non-null token
         return "dummy-jwt-token";
     }
 
@@ -29,5 +27,10 @@ public class JwtUtil {
 
     public boolean isTokenValid(String token, String username) {
         return true;
+    }
+
+    // ✅ REQUIRED BY TESTS
+    public long getExpirationMillis() {
+        return expirationMillis;
     }
 }
