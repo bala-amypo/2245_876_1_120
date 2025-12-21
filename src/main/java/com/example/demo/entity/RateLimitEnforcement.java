@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import jakarta.persistence.*;
 
@@ -25,11 +27,11 @@ public class RateLimitEnforcement {
     @Column(nullable = false)
     private String message;
 
-    // No-arg constructor
+    // ✅ no-arg constructor
     public RateLimitEnforcement() {
     }
 
-    // Parameterized constructor
+    // ✅ SPEC constructor
     public RateLimitEnforcement(ApiKey apiKey,
                                 LocalDateTime blockedAt,
                                 Integer limitExceededBy,
@@ -40,7 +42,18 @@ public class RateLimitEnforcement {
         this.message = message;
     }
 
-    // Getters & Setters
+    // ✅ TEST-COMPATIBLE constructor (THIS FIXES LINE 469)
+    public RateLimitEnforcement(ApiKey apiKey,
+                                Instant blockedAt,
+                                Integer limitExceededBy,
+                                String message) {
+        this.apiKey = apiKey;
+        this.blockedAt = LocalDateTime.ofInstant(blockedAt, ZoneId.systemDefault());
+        this.limitExceededBy = limitExceededBy;
+        this.message = message;
+    }
+
+    // Getters
     public Long getId() {
         return id;
     }
@@ -49,28 +62,34 @@ public class RateLimitEnforcement {
         return apiKey;
     }
 
-    public void setApiKey(ApiKey apiKey) {
-        this.apiKey = apiKey;
-    }
-
     public LocalDateTime getBlockedAt() {
         return blockedAt;
-    }
-
-    public void setBlockedAt(LocalDateTime blockedAt) {
-        this.blockedAt = blockedAt;
     }
 
     public Integer getLimitExceededBy() {
         return limitExceededBy;
     }
 
-    public void setLimitExceededBy(Integer limitExceededBy) {
-        this.limitExceededBy = limitExceededBy;
-    }
-
     public String getMessage() {
         return message;
+    }
+
+    // Setters
+    public void setApiKey(ApiKey apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void setBlockedAt(LocalDateTime blockedAt) {
+        this.blockedAt = blockedAt;
+    }
+
+    // ✅ REQUIRED setter for tests
+    public void setBlockedAt(Instant blockedAt) {
+        this.blockedAt = LocalDateTime.ofInstant(blockedAt, ZoneId.systemDefault());
+    }
+
+    public void setLimitExceededBy(Integer limitExceededBy) {
+        this.limitExceededBy = limitExceededBy;
     }
 
     public void setMessage(String message) {
