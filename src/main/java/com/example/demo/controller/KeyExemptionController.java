@@ -5,11 +5,12 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.*;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 import com.example.demo.entity.KeyExemption;
 import com.example.demo.service.KeyExemptionService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping("/api/key-exemptions")
@@ -21,20 +22,36 @@ public class KeyExemptionController {
         this.exemptionService = exemptionService;
     }
 
-    @Operation(summary = "Create a key exemption")
+    @Operation(
+        summary = "Create a key exemption",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = KeyExemption.class)
+            )
+        )
+    )
     @PostMapping
     public KeyExemption createExemption(
-            @RequestBody(description = "Key exemption details", required = true)
             @org.springframework.web.bind.annotation.RequestBody
             KeyExemption exemption) {
         return exemptionService.createExemption(exemption);
     }
 
-    @Operation(summary = "Update a key exemption")
+    @Operation(
+        summary = "Update a key exemption",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = KeyExemption.class)
+            )
+        )
+    )
     @PutMapping("/{id}")
     public KeyExemption updateExemption(
             @PathVariable Long id,
-            @RequestBody(description = "Updated exemption details", required = true)
             @org.springframework.web.bind.annotation.RequestBody
             KeyExemption exemption) {
         return exemptionService.updateExemption(id, exemption);
