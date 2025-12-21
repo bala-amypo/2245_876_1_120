@@ -42,7 +42,7 @@ public class RateLimitEnforcement {
         this.message = message;
     }
 
-    // ✅ TEST-COMPATIBLE constructor (THIS FIXES LINE 469)
+    
     public RateLimitEnforcement(ApiKey apiKey,
                                 Instant blockedAt,
                                 Integer limitExceededBy,
