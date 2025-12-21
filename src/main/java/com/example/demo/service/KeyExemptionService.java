@@ -1,16 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.KeyExemptionDto;
+import com.example.demo.entity.KeyExemption;
 
 import java.util.List;
 
 public interface KeyExemptionService {
 
-    KeyExemptionDto createExemption(KeyExemptionDto dto);
+    KeyExemption createExemption(KeyExemption exemption);
 
-    KeyExemptionDto updateExemption(Long id, KeyExemptionDto dto);
+    KeyExemption updateExemption(Long id, KeyExemption exemption);
 
-    KeyExemptionDto getExemptionByKey(Long apiKeyId);
+    KeyExemption getExemptionByKey(Long apiKeyId);
 
-    List<KeyExemptionDto> getAllExemptions();
+    List<KeyExemption> getAllExemptions();
 }
