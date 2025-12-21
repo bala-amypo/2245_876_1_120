@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import jakarta.persistence.*;
 
@@ -22,18 +24,25 @@ public class ApiUsageLog {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    // No-arg constructor
+    // ✅ REQUIRED no-arg constructor
     public ApiUsageLog() {
     }
 
-    // Parameterized constructor
+    // ✅ ORIGINAL constructor (spec-compliant)
     public ApiUsageLog(ApiKey apiKey, String endpoint, LocalDateTime timestamp) {
         this.apiKey = apiKey;
         this.endpoint = endpoint;
         this.timestamp = timestamp;
     }
 
-    // Getters & Setters
+    // ✅ NEW constructor (TEST-COMPATIBLE)
+    public ApiUsageLog(ApiKey apiKey, String endpoint, Instant timestamp) {
+        this.apiKey = apiKey;
+        this.endpoint = endpoint;
+        this.timestamp = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
+    }
+
+    // Getters & setters
     public Long getId() {
         return id;
     }
