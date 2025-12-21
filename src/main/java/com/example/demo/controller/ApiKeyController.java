@@ -10,34 +10,24 @@ import java.util.List;
 @RequestMapping("/api/api-keys")
 public class ApiKeyController {
 
-    private final ApiKeyService apiKeyService;
+    private final ApiKeyService service;
 
-    public ApiKeyController(ApiKeyService apiKeyService) {
-        this.apiKeyService = apiKeyService;
+    public ApiKeyController(ApiKeyService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ApiKey createApiKey(@RequestBody ApiKey apiKey) {
-        return apiKeyService.createApiKey(apiKey);
-    }
-
-    @PutMapping("/{id}")
-    public ApiKey updateApiKey(@PathVariable Long id, @RequestBody ApiKey apiKey) {
-        return apiKeyService.updateApiKey(id, apiKey);
+    public ApiKey create(@RequestBody ApiKey apiKey) {
+        return service.create(apiKey);
     }
 
     @GetMapping("/{id}")
-    public ApiKey getApiKeyById(@PathVariable Long id) {
-        return apiKeyService.getApiKeyById(id);
+    public ApiKey get(@PathVariable Long id) {
+        return service.getById(id);
     }
 
     @GetMapping
-    public List<ApiKey> getAllApiKeys() {
-        return apiKeyService.getAllApiKeys();
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public void deactivateApiKey(@PathVariable Long id) {
-        apiKeyService.deactivateApiKey(id);
+    public List<ApiKey> getAll() {
+        return service.getAll();
     }
 }
