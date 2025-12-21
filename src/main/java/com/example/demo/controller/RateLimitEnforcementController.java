@@ -1,3 +1,11 @@
+package com.example.demo.controller;
+
+import com.example.demo.entity.RateLimitEnforcement;
+import com.example.demo.service.RateLimitEnforcementService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/enforcements")
 public class RateLimitEnforcementController {
@@ -9,8 +17,8 @@ public class RateLimitEnforcementController {
     }
 
     @PostMapping
-    public void create(@RequestBody RateLimitEnforcement enforcement) {
-        service.createEnforcement(enforcement);
+    public RateLimitEnforcement create(@RequestBody RateLimitEnforcement enforcement) {
+        return service.createEnforcement(enforcement);
     }
 
     @GetMapping("/{id}")
