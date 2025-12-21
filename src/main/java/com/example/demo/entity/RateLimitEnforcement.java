@@ -1,8 +1,3 @@
-package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "rate_limit_enforcements")
 public class RateLimitEnforcement {
@@ -13,6 +8,11 @@ public class RateLimitEnforcement {
 
     @ManyToOne
     @JoinColumn(name = "api_key_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({
+        "plan",
+        "createdAt",
+        "updatedAt"
+    })
     private ApiKey apiKey;
 
     @Column(nullable = false)
@@ -25,47 +25,14 @@ public class RateLimitEnforcement {
 
     public RateLimitEnforcement() {}
 
-    public RateLimitEnforcement(ApiKey apiKey, LocalDateTime blockedAt,
-                                Integer limitExceededBy, String message) {
-        this.apiKey = apiKey;
-        this.blockedAt = blockedAt;
-        this.limitExceededBy = limitExceededBy;
-        this.message = message;
-    }
+    public Long getId() { return id; }
+    public ApiKey getApiKey() { return apiKey; }
+    public LocalDateTime getBlockedAt() { return blockedAt; }
+    public Integer getLimitExceededBy() { return limitExceededBy; }
+    public String getMessage() { return message; }
 
-    public Long getId() {
-        return id;
-    }
-
-    public ApiKey getApiKey() {
-        return apiKey;
-    }
-
-    public LocalDateTime getBlockedAt() {
-        return blockedAt;
-    }
-
-    public Integer getLimitExceededBy() {
-        return limitExceededBy;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setApiKey(ApiKey apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public void setBlockedAt(LocalDateTime blockedAt) {
-        this.blockedAt = blockedAt;
-    }
-
-    public void setLimitExceededBy(Integer limitExceededBy) {
-        this.limitExceededBy = limitExceededBy;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public void setApiKey(ApiKey apiKey) { this.apiKey = apiKey; }
+    public void setBlockedAt(LocalDateTime blockedAt) { this.blockedAt = blockedAt; }
+    public void setLimitExceededBy(Integer limitExceededBy) { this.limitExceededBy = limitExceededBy; }
+    public void setMessage(String message) { this.message = message; }
 }
