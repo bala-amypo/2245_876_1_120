@@ -22,6 +22,12 @@ public class KeyExemptionController {
         return service.createExemption(dto);
     }
 
+    @PutMapping("/{id}")
+    public KeyExemptionDto update(@PathVariable Long id,
+                                  @RequestBody @Valid KeyExemptionDto dto) {
+        return service.updateExemption(id, dto);
+    }
+
     @GetMapping("/key/{keyId}")
     public KeyExemptionDto getByApiKey(@PathVariable Long keyId) {
         return service.getExemptionByKey(keyId);
@@ -30,11 +36,5 @@ public class KeyExemptionController {
     @GetMapping
     public List<KeyExemptionDto> getAll() {
         return service.getAllExemptions();
-    }
-
-    @PutMapping("/{id}")
-    public KeyExemptionDto update(@PathVariable Long id,
-                                  @RequestBody @Valid KeyExemptionDto dto) {
-        return service.updateExemption(id, dto);
     }
 }
