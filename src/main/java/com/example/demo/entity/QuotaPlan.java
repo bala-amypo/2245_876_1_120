@@ -23,11 +23,11 @@ public class QuotaPlan {
     @Column(nullable = false)
     private Boolean active = true;
 
-    // No-arg constructor
+    
     public QuotaPlan() {
     }
 
-    // Parameterized constructor
+    
     public QuotaPlan(String planName, Integer dailyLimit, String description, Boolean active) {
         this.planName = planName;
         this.dailyLimit = dailyLimit;
