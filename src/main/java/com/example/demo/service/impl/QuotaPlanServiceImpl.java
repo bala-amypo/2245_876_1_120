@@ -15,7 +15,7 @@ public class QuotaPlanServiceImpl implements QuotaPlanService {
 
     private final QuotaPlanRepository quotaPlanRepository;
 
-    // Constructor injection (ONLY ONE CONSTRUCTOR)
+    
     public QuotaPlanServiceImpl(QuotaPlanRepository quotaPlanRepository) {
         this.quotaPlanRepository = quotaPlanRepository;
     }
