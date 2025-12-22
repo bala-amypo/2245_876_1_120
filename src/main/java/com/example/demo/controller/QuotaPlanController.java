@@ -43,3 +43,4 @@ public class QuotaPlanController {
         quotaPlanService.deactivateQuotaPlan(id);
     }
 }
+ 
