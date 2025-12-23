@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import jakarta.persistence.*;
 
@@ -19,17 +21,18 @@ public class KeyExemption {
     private String notes;
 
     @Column(nullable = false)
-    private Boolean unlimitedAccess;
+    private Boolean unlimitedAccess = false;
 
     private Integer temporaryExtensionLimit;
 
+    @Column(nullable = false)
     private LocalDateTime validUntil;
 
-    // No-arg constructor
+    // ✅ no-arg constructor
     public KeyExemption() {
     }
 
-    // Parameterized constructor
+    // ✅ SPEC constructor
     public KeyExemption(ApiKey apiKey,
                         String notes,
                         Boolean unlimitedAccess,
@@ -42,7 +45,21 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // Getters & Setters
+    // ✅ TEST-COMPATIBLE constructor (THIS FIXES LINE 469)
+    public KeyExemption(ApiKey apiKey,
+                        String notes,
+                        Boolean unlimitedAccess,
+                        Integer temporaryExtensionLimit,
+                        Instant validUntil) {
+        this.apiKey = apiKey;
+        this.notes = notes;
+        this.unlimitedAccess = unlimitedAccess;
+        this.temporaryExtensionLimit = temporaryExtensionLimit;
+        this.validUntil =
+                LocalDateTime.ofInstant(validUntil, ZoneId.systemDefault());
+    }
+
+    // Getters
     public Long getId() {
         return id;
     }
@@ -51,39 +68,47 @@ public class KeyExemption {
         return apiKey;
     }
 
-    public void setApiKey(ApiKey apiKey) {
-        this.apiKey = apiKey;
-    }
-
     public String getNotes() {
         return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public Boolean getUnlimitedAccess() {
         return unlimitedAccess;
     }
 
-    public void setUnlimitedAccess(Boolean unlimitedAccess) {
-        this.unlimitedAccess = unlimitedAccess;
-    }
-
     public Integer getTemporaryExtensionLimit() {
         return temporaryExtensionLimit;
-    }
-
-    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) {
-        this.temporaryExtensionLimit = temporaryExtensionLimit;
     }
 
     public LocalDateTime getValidUntil() {
         return validUntil;
     }
 
+    // Setters
+    public void setApiKey(ApiKey apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public void setUnlimitedAccess(Boolean unlimitedAccess) {
+        this.unlimitedAccess = unlimitedAccess;
+    }
+
+    public void setTemporaryExtensionLimit(Integer temporaryExtensionLimit) {
+        this.temporaryExtensionLimit = temporaryExtensionLimit;
+    }
+
+    // ✅ SPEC setter
     public void setValidUntil(LocalDateTime validUntil) {
         this.validUntil = validUntil;
+    }
+
+    // ✅ REQUIRED for tests
+    public void setValidUntil(Instant validUntil) {
+        this.validUntil =
+                LocalDateTime.ofInstant(validUntil, ZoneId.systemDefault());
     }
 }
