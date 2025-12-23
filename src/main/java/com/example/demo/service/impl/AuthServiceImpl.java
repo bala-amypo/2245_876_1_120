@@ -10,6 +10,7 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,12 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // REQUIRED constructor signature for tests
+    // 🔑 IMPORTANT FIX IS HERE
+    @Autowired
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
-            Object authenticationManager,
+            @Autowired(required = false) Object authenticationManager, // ⬅ IGNORE AT RUNTIME
             JwtUtil jwtUtil
     ) {
         this.userAccountRepository = userAccountRepository;
@@ -52,11 +54,6 @@ public class AuthServiceImpl implements AuthService {
 
         UserAccount savedUser = userAccountRepository.save(user);
 
-        // CRITICAL: mock-safe fallback
-        if (savedUser == null) {
-            savedUser = user;
-        }
-
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", savedUser.getRole());
         claims.put("userId", savedUser.getId());
@@ -80,8 +77,11 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-        // 🚨 TEST-SAFE: DO NOT validate password
-        // (passwordEncoder is not mocked in t23)
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+            throw new BadRequestException("Invalid credentials");
+        }
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
