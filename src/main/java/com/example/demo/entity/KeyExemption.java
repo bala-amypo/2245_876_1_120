@@ -25,9 +25,11 @@ public class KeyExemption {
 
     private LocalDateTime validUntil;
 
+    // No-arg constructor
     public KeyExemption() {
     }
 
+    // Parameterized constructor
     public KeyExemption(ApiKey apiKey,
                         String notes,
                         Boolean unlimitedAccess,
@@ -40,6 +42,7 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
+    // Getters & Setters
     public Long getId() {
         return id;
     }
