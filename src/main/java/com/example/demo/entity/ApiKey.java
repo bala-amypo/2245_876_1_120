@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -28,7 +27,6 @@ public class ApiKey {
     private Boolean active = true;
 
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
     // No-arg constructor
@@ -54,10 +52,23 @@ public class ApiKey {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters & Setters
+    // ===== REQUIRED BY TESTS =====
+
     public Long getId() {
         return id;
     }
+
+    // Tests call setId(...)
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // Tests call isActive()
+    public boolean isActive() {
+        return Boolean.TRUE.equals(this.active);
+    }
+
+    // ===== STANDARD GETTERS/SETTERS =====
 
     public String getKeyValue() {
         return keyValue;
