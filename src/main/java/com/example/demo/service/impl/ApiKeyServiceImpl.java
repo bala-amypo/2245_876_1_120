@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         QuotaPlan plan = quotaPlanRepository.findById(apiKey.getPlan().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("QuotaPlan not found"));
 
-        if (!Boolean.TRUE.equals(plan.getActive())) {
+        if (!plan.isActive()) {
             throw new BadRequestException("Quota plan is inactive");
         }
 
@@ -40,10 +39,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         }
 
         apiKey.setPlan(plan);
-
-        if (apiKey.getActive() == null) {
-            apiKey.setActive(true);
-        }
+        apiKey.setActive(apiKey.getActive() != null ? apiKey.getActive() : true);
 
         return apiKeyRepository.save(apiKey);
     }
@@ -61,7 +57,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
             QuotaPlan plan = quotaPlanRepository.findById(apiKey.getPlan().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("QuotaPlan not found"));
 
-            if (!Boolean.TRUE.equals(plan.getActive())) {
+            if (!plan.isActive()) {
                 throw new BadRequestException("Quota plan is inactive");
             }
 
@@ -79,9 +75,11 @@ public class ApiKeyServiceImpl implements ApiKeyService {
                 .orElseThrow(() -> new ResourceNotFoundException("ApiKey not found"));
     }
 
+    // ✅ TESTS EXPECT THIS — NOT Optional
     @Override
-    public Optional<ApiKey> getApiKeyByValue(String keyValue) {
-        return apiKeyRepository.findByKeyValue(keyValue);
+    public ApiKey getApiKeyByValue(String keyValue) {
+        return apiKeyRepository.findByKeyValue(keyValue)
+                .orElseThrow(() -> new ResourceNotFoundException("ApiKey not found"));
     }
 
     @Override
