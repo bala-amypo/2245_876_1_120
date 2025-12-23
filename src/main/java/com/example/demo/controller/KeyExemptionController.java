@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,7 @@ public class KeyExemptionController {
     }
 
     @GetMapping("/key/{keyId}")
-    public Optional<KeyExemption> getExemptionByKey(
+    public KeyExemption getExemptionByKey(
             @PathVariable Long keyId) {
         return exemptionService.getExemptionByKey(keyId);
     }
