@@ -10,7 +10,6 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +23,22 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // 🔑 IMPORTANT FIX IS HERE
-    @Autowired
+    // ✅ CONSTRUCTOR USED BY SPRING BOOT (NO Object)
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
-            @Autowired(required = false) Object authenticationManager, // ⬅ IGNORE AT RUNTIME
+            JwtUtil jwtUtil
+    ) {
+        this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+
+    // ✅ CONSTRUCTOR USED BY TESTS (SIGNATURE MUST MATCH)
+    public AuthServiceImpl(
+            UserAccountRepository userAccountRepository,
+            PasswordEncoder passwordEncoder,
+            Object authenticationManager, // ignored
             JwtUtil jwtUtil
     ) {
         this.userAccountRepository = userAccountRepository;
