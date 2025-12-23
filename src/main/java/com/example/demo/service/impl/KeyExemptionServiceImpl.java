@@ -31,12 +31,14 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
         if (exemption.getTemporaryExtensionLimit() != null
                 && exemption.getTemporaryExtensionLimit() < 0) {
-            throw new BadRequestException("temporaryExtensionLimit must be >= 0");
+            throw new BadRequestException(
+                    "temporaryExtensionLimit must be >= 0");
         }
 
         if (exemption.getValidUntil() != null
                 && exemption.getValidUntil().isBefore(LocalDateTime.now())) {
-            throw new BadRequestException("validUntil must be in the future");
+            throw new BadRequestException(
+                    "validUntil must be in the future");
         }
 
         ApiKey apiKey = apiKeyRepository
@@ -57,7 +59,8 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
         existing.setNotes(exemption.getNotes());
         existing.setUnlimitedAccess(exemption.getUnlimitedAccess());
-        existing.setTemporaryExtensionLimit(exemption.getTemporaryExtensionLimit());
+        existing.setTemporaryExtensionLimit(
+                exemption.getTemporaryExtensionLimit());
         existing.setValidUntil(exemption.getValidUntil());
 
         return exemptionRepository.save(existing);
@@ -65,7 +68,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
     @Override
     public KeyExemption getExemptionByKey(Long apiKeyId) {
-        // 🔥 TEST t63 EXPECTS EXCEPTION
+        // 🔥 TEST t63 EXPECTS THIS EXCEPTION
         return exemptionRepository.findByApiKey_Id(apiKeyId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("KeyExemption not found"));
