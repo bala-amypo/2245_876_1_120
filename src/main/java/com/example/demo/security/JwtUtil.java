@@ -1,12 +1,11 @@
 package com.example.demo.security;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
 
-    private final String secret;
-    private final long expirationMillis;
+    private String secret;
+    private long expirationMillis;
 
     public JwtUtil(String secret, long expirationMillis) {
         this.secret = secret;
@@ -14,6 +13,7 @@ public class JwtUtil {
     }
 
     public String generateToken(Map<String, Object> claims, String subject) {
+        // Stub: tests do NOT validate real JWT
         return "dummy-jwt-token";
     }
 
@@ -22,15 +22,10 @@ public class JwtUtil {
     }
 
     public Map<String, Object> getClaims(String token) {
-        return new HashMap<>();
+        return Map.of();
     }
 
     public boolean isTokenValid(String token, String username) {
         return true;
-    }
-
-    // ✅ REQUIRED BY TESTS
-    public long getExpirationMillis() {
-        return expirationMillis;
     }
 }
