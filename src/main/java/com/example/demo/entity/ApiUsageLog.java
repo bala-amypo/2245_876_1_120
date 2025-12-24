@@ -1,3 +1,14 @@
+package com.example.demo.entity;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "api_usage_logs")
 public class ApiUsageLog {
@@ -14,6 +25,7 @@ public class ApiUsageLog {
     private String endpoint;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
 
     public ApiUsageLog() {}
@@ -39,14 +51,15 @@ public class ApiUsageLog {
         this.endpoint = endpoint;
     }
 
-    // ✅ ONLY JSON setter
+    // ✅ JSON setter (Swagger + POST use THIS)
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    // ❌ HIDDEN FROM JSON (tests still use it)
-    @com.fasterxml.jackson.annotation.JsonIgnore
+    // ❌ Test-only setter (hidden from Swagger/JSON)
+    @JsonIgnore
     public void setTimestamp(Instant timestamp) {
-        this.timestamp = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
+        this.timestamp =
+                LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
     }
 }

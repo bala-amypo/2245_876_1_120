@@ -1,3 +1,14 @@
+package com.example.demo.entity;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "rate_limit_enforcements")
 public class RateLimitEnforcement {
@@ -11,6 +22,7 @@ public class RateLimitEnforcement {
     private ApiKey apiKey;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime blockedAt;
 
     @Column(nullable = false)
@@ -43,15 +55,16 @@ public class RateLimitEnforcement {
         this.apiKey = apiKey;
     }
 
-    // ✅ ONLY JSON setter
+    // ✅ JSON setter
     public void setBlockedAt(LocalDateTime blockedAt) {
         this.blockedAt = blockedAt;
     }
 
-    // ❌ HIDDEN FROM JSON (tests still use it)
-    @com.fasterxml.jackson.annotation.JsonIgnore
+    // ❌ Test-only setter
+    @JsonIgnore
     public void setBlockedAt(Instant blockedAt) {
-        this.blockedAt = LocalDateTime.ofInstant(blockedAt, ZoneId.systemDefault());
+        this.blockedAt =
+                LocalDateTime.ofInstant(blockedAt, ZoneId.systemDefault());
     }
 
     public void setLimitExceededBy(Integer limitExceededBy) {
