@@ -23,7 +23,6 @@ public class ApiUsageLogController {
     }
 
     @Operation(
-        summary = "Create API usage log",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
