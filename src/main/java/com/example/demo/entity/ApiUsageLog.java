@@ -1,11 +1,3 @@
-package com.example.demo.entity;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
-import jakarta.persistence.*;
-
 @Entity
 @Table(name = "api_usage_logs")
 public class ApiUsageLog {
@@ -24,42 +16,21 @@ public class ApiUsageLog {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    // ✅ REQUIRED no-arg constructor
-    public ApiUsageLog() {
-    }
+    public ApiUsageLog() {}
 
-    // ✅ SPEC-COMPLIANT constructor
     public ApiUsageLog(ApiKey apiKey, String endpoint, LocalDateTime timestamp) {
         this.apiKey = apiKey;
         this.endpoint = endpoint;
         this.timestamp = timestamp;
     }
 
-    // ✅ TEST-COMPATIBLE constructor
-    public ApiUsageLog(ApiKey apiKey, String endpoint, Instant timestamp) {
-        this.apiKey = apiKey;
-        this.endpoint = endpoint;
-        this.timestamp = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
-    }
+    // ===== GETTERS =====
+    public Long getId() { return id; }
+    public ApiKey getApiKey() { return apiKey; }
+    public String getEndpoint() { return endpoint; }
+    public LocalDateTime getTimestamp() { return timestamp; }
 
-    // Getters
-    public Long getId() {
-        return id;
-    }
-
-    public ApiKey getApiKey() {
-        return apiKey;
-    }
-
-    public String getEndpoint() {
-        return endpoint;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    // Setters
+    // ===== SETTERS =====
     public void setApiKey(ApiKey apiKey) {
         this.apiKey = apiKey;
     }
@@ -68,12 +39,13 @@ public class ApiUsageLog {
         this.endpoint = endpoint;
     }
 
-    // ✅ ORIGINAL setter
+    // ✅ ONLY JSON setter
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    // ✅ THIS IS THE LINE YOUR TESTS REQUIRE
+    // ❌ HIDDEN FROM JSON (tests still use it)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     public void setTimestamp(Instant timestamp) {
         this.timestamp = LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
     }
