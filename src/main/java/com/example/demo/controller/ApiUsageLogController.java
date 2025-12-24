@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.entity.ApiUsageLog;
 import com.example.demo.service.ApiUsageLogService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping("/api/usage-logs")
@@ -20,12 +22,22 @@ public class ApiUsageLogController {
         this.apiUsageLogService = apiUsageLogService;
     }
 
+    @Operation(
+        summary = "Create API usage log",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ApiUsageLog.class)
+            )
+        )
+    )
     @PostMapping(
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ApiUsageLog logUsage(
-            @RequestBody ApiUsageLog log) {
+            @org.springframework.web.bind.annotation.RequestBody ApiUsageLog log) {
         return apiUsageLogService.logUsage(log);
     }
 
