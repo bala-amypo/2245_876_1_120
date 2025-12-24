@@ -4,6 +4,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -26,18 +29,22 @@ public class KeyExemption {
     private Integer temporaryExtensionLimit;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime validUntil;
 
-    // ✅ no-arg constructor
+    // ================= CONSTRUCTORS =================
+
     public KeyExemption() {
     }
 
-    // ✅ SPEC constructor
-    public KeyExemption(ApiKey apiKey,
-                        String notes,
-                        Boolean unlimitedAccess,
-                        Integer temporaryExtensionLimit,
-                        LocalDateTime validUntil) {
+    // SPEC constructor
+    public KeyExemption(
+            ApiKey apiKey,
+            String notes,
+            Boolean unlimitedAccess,
+            Integer temporaryExtensionLimit,
+            LocalDateTime validUntil
+    ) {
         this.apiKey = apiKey;
         this.notes = notes;
         this.unlimitedAccess = unlimitedAccess;
@@ -45,12 +52,14 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // ✅ TEST-COMPATIBLE constructor (THIS FIXES LINE 469)
-    public KeyExemption(ApiKey apiKey,
-                        String notes,
-                        Boolean unlimitedAccess,
-                        Integer temporaryExtensionLimit,
-                        Instant validUntil) {
+    // TEST constructor (Instant)
+    public KeyExemption(
+            ApiKey apiKey,
+            String notes,
+            Boolean unlimitedAccess,
+            Integer temporaryExtensionLimit,
+            Instant validUntil
+    ) {
         this.apiKey = apiKey;
         this.notes = notes;
         this.unlimitedAccess = unlimitedAccess;
@@ -59,7 +68,8 @@ public class KeyExemption {
                 LocalDateTime.ofInstant(validUntil, ZoneId.systemDefault());
     }
 
-    // Getters
+    // ================= GETTERS =================
+
     public Long getId() {
         return id;
     }
@@ -84,7 +94,8 @@ public class KeyExemption {
         return validUntil;
     }
 
-    // Setters
+    // ================= SETTERS =================
+
     public void setApiKey(ApiKey apiKey) {
         this.apiKey = apiKey;
     }
@@ -101,12 +112,13 @@ public class KeyExemption {
         this.temporaryExtensionLimit = temporaryExtensionLimit;
     }
 
-    // ✅ SPEC setter
+    // ✅ Jackson uses THIS
     public void setValidUntil(LocalDateTime validUntil) {
         this.validUntil = validUntil;
     }
 
-    // ✅ REQUIRED for tests
+    // ❌ Jackson must ignore this (tests still use it)
+    @JsonIgnore
     public void setValidUntil(Instant validUntil) {
         this.validUntil =
                 LocalDateTime.ofInstant(validUntil, ZoneId.systemDefault());
