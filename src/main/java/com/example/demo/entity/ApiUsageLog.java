@@ -25,15 +25,27 @@ public class ApiUsageLog {
     private String endpoint;
 
     @Column(nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(
+        pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][X]"
+    )
     private LocalDateTime timestamp;
 
+    // ===== REQUIRED no-arg constructor =====
     public ApiUsageLog() {}
 
+    // ===== SPEC constructor =====
     public ApiUsageLog(ApiKey apiKey, String endpoint, LocalDateTime timestamp) {
         this.apiKey = apiKey;
         this.endpoint = endpoint;
         this.timestamp = timestamp;
+    }
+
+    // ===== TEST constructor (Instant) =====
+    public ApiUsageLog(ApiKey apiKey, String endpoint, Instant timestamp) {
+        this.apiKey = apiKey;
+        this.endpoint = endpoint;
+        this.timestamp =
+                LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
     }
 
     // ===== GETTERS =====
@@ -51,12 +63,12 @@ public class ApiUsageLog {
         this.endpoint = endpoint;
     }
 
-    // ✅ JSON setter (Swagger + POST use THIS)
+    // ✅ JSON setter (Swagger + API calls)
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    // ❌ Test-only setter (hidden from Swagger/JSON)
+    // ❌ Hidden from JSON (tests still use it)
     @JsonIgnore
     public void setTimestamp(Instant timestamp) {
         this.timestamp =
