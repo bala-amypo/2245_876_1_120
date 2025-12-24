@@ -24,7 +24,6 @@ public class RateLimitEnforcementController {
     }
 
     @Operation(
-        summary = "Create rate limit enforcement",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
