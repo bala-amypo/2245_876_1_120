@@ -23,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // ✅ CONSTRUCTOR USED BY SPRING BOOT (NO Object)
+    // ✅ SINGLE CONSTRUCTOR — SPRING IS HAPPY
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -33,20 +33,6 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
-
-    // ✅ CONSTRUCTOR USED BY TESTS (SIGNATURE MUST MATCH)
-    public AuthServiceImpl(
-            UserAccountRepository userAccountRepository,
-            PasswordEncoder passwordEncoder,
-            Object authenticationManager, // ignored
-            JwtUtil jwtUtil
-    ) {
-        this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
-
-    // ================= REGISTER =================
 
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
@@ -76,8 +62,6 @@ public class AuthServiceImpl implements AuthService {
                 savedUser.getRole()
         );
     }
-
-    // ================= LOGIN =================
 
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
