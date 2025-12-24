@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.entity.RateLimitEnforcement;
 import com.example.demo.service.RateLimitEnforcementService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @RestController
 @RequestMapping("/api/enforcements")
 public class RateLimitEnforcementController {
@@ -18,15 +22,20 @@ public class RateLimitEnforcementController {
         this.enforcementService = enforcementService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     public RateLimitEnforcement createEnforcement(
-            @RequestBody RateLimitEnforcement enforcement) {
+            @RequestBody(
+                required = true,
+                content = @Content(schema = @Schema(implementation = RateLimitEnforcement.class))
+            )
+            @org.springframework.web.bind.annotation.RequestBody
+            RateLimitEnforcement enforcement) {
+
         return enforcementService.createEnforcement(enforcement);
     }
 
     @GetMapping("/{id}")
-    public RateLimitEnforcement getEnforcementById(
-            @PathVariable Long id) {
+    public RateLimitEnforcement getEnforcementById(@PathVariable Long id) {
         return enforcementService.getEnforcementById(id);
     }
 
