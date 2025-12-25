@@ -22,6 +22,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
     public KeyExemptionServiceImpl(
             KeyExemptionRepository exemptionRepository,
             ApiKeyRepository apiKeyRepository) {
+
         this.exemptionRepository = exemptionRepository;
         this.apiKeyRepository = apiKeyRepository;
     }
@@ -35,19 +36,33 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
                     "temporaryExtensionLimit must be >= 0");
         }
 
-        if (exemption.getValidUntil() != null
-                && exemption.getValidUntil().isBefore(LocalDateTime.now())) {
-            throw new BadRequestException(
-                    "validUntil must be in the future");
-        }
-
-        ApiKey apiKey = apiKeyRepository
-                .findById(exemption.getApiKey().getId())
+        ApiKey apiKey = apiKeyRepository.findById(
+                exemption.getApiKey().getId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException("ApiKey not found"));
 
-        exemption.setApiKey(apiKey);
-        return exemptionRepository.save(exemption);
+        // 🔥 NORMALIZE SWAGGER REQUEST
+        KeyExemption clean = new KeyExemption();
+        clean.setApiKey(apiKey);
+        clean.setNotes(exemption.getNotes());
+
+        clean.setUnlimitedAccess(
+                exemption.getUnlimitedAccess() != null
+                        ? exemption.getUnlimitedAccess()
+                        : false
+        );
+
+        clean.setTemporaryExtensionLimit(
+                exemption.getTemporaryExtensionLimit()
+        );
+
+        clean.setValidUntil(
+                exemption.getValidUntil() != null
+                        ? exemption.getValidUntil()
+                        : LocalDateTime.now().plusDays(1)
+        );
+
+        return exemptionRepository.save(clean);
     }
 
     @Override
@@ -68,7 +83,6 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
 
     @Override
     public KeyExemption getExemptionByKey(Long apiKeyId) {
-        // 🔥 TEST t63 EXPECTS THIS EXCEPTION
         return exemptionRepository.findByApiKey_Id(apiKeyId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("KeyExemption not found"));

@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -37,14 +38,29 @@ public class RateLimitEnforcementServiceImpl
                     "limitExceededBy must be >= 1");
         }
 
-        ApiKey apiKey = apiKeyRepository
-                .findById(enforcement.getApiKey().getId())
+        ApiKey apiKey = apiKeyRepository.findById(
+                enforcement.getApiKey().getId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException("ApiKey not found"));
 
-        enforcement.setApiKey(apiKey);
+        // 🔥 NORMALIZE SWAGGER REQUEST (KEY FIX)
+        RateLimitEnforcement clean = new RateLimitEnforcement();
+        clean.setApiKey(apiKey);
+        clean.setLimitExceededBy(enforcement.getLimitExceededBy());
 
-        return enforcementRepository.save(enforcement);
+        clean.setMessage(
+                enforcement.getMessage() != null
+                        ? enforcement.getMessage()
+                        : "Rate limit exceeded"
+        );
+
+        clean.setBlockedAt(
+                enforcement.getBlockedAt() != null
+                        ? enforcement.getBlockedAt()
+                        : LocalDateTime.now()
+        );
+
+        return enforcementRepository.save(clean);
     }
 
     @Override
