@@ -10,8 +10,8 @@ public interface KeyExemptionService {
 
     KeyExemption updateExemption(Long id, KeyExemption exemption);
 
-    // 🔥 CHANGED: return KeyExemption, NOT Optional
-    KeyExemption getExemptionByKey(Long apiKeyId);
+    // ✅ CHANGED return type
+    List<KeyExemption> getExemptionByKey(Long apiKeyId);
 
     List<KeyExemption> getAllExemptions();
 }

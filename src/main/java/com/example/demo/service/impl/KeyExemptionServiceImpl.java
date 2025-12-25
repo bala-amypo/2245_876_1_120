@@ -22,7 +22,6 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
     public KeyExemptionServiceImpl(
             KeyExemptionRepository exemptionRepository,
             ApiKeyRepository apiKeyRepository) {
-
         this.exemptionRepository = exemptionRepository;
         this.apiKeyRepository = apiKeyRepository;
     }
@@ -36,33 +35,19 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
                     "temporaryExtensionLimit must be >= 0");
         }
 
-        ApiKey apiKey = apiKeyRepository.findById(
-                exemption.getApiKey().getId())
+        if (exemption.getValidUntil() != null
+                && exemption.getValidUntil().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException(
+                    "validUntil must be in the future");
+        }
+
+        ApiKey apiKey = apiKeyRepository
+                .findById(exemption.getApiKey().getId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException("ApiKey not found"));
 
-        // 🔥 NORMALIZE SWAGGER REQUEST
-        KeyExemption clean = new KeyExemption();
-        clean.setApiKey(apiKey);
-        clean.setNotes(exemption.getNotes());
-
-        clean.setUnlimitedAccess(
-                exemption.getUnlimitedAccess() != null
-                        ? exemption.getUnlimitedAccess()
-                        : false
-        );
-
-        clean.setTemporaryExtensionLimit(
-                exemption.getTemporaryExtensionLimit()
-        );
-
-        clean.setValidUntil(
-                exemption.getValidUntil() != null
-                        ? exemption.getValidUntil()
-                        : LocalDateTime.now().plusDays(1)
-        );
-
-        return exemptionRepository.save(clean);
+        exemption.setApiKey(apiKey);
+        return exemptionRepository.save(exemption);
     }
 
     @Override
@@ -81,11 +66,19 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return exemptionRepository.save(existing);
     }
 
+    // ✅ FIXED — returns LIST
     @Override
-    public KeyExemption getExemptionByKey(Long apiKeyId) {
-        return exemptionRepository.findByApiKey_Id(apiKeyId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("KeyExemption not found"));
+    public List<KeyExemption> getExemptionByKey(Long apiKeyId) {
+
+        List<KeyExemption> exemptions =
+                exemptionRepository.findAllByApiKey_Id(apiKeyId);
+
+        if (exemptions.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    "No KeyExemption found for apiKeyId=" + apiKeyId);
+        }
+
+        return exemptions;
     }
 
     @Override
