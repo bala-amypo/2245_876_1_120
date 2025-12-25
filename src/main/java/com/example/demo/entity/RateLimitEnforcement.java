@@ -6,8 +6,8 @@ import java.time.ZoneId;
 
 import jakarta.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "rate_limit_enforcements")
@@ -21,8 +21,9 @@ public class RateLimitEnforcement {
     @JoinColumn(name = "api_key_id", nullable = false)
     private ApiKey apiKey;
 
+    // ✅ ACCEPTS: 2025-12-25T14:09:28.957Z
     @Column(nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime blockedAt;
 
     @Column(nullable = false)
@@ -33,10 +34,11 @@ public class RateLimitEnforcement {
 
     public RateLimitEnforcement() {}
 
-    public RateLimitEnforcement(ApiKey apiKey,
-                                LocalDateTime blockedAt,
-                                Integer limitExceededBy,
-                                String message) {
+    public RateLimitEnforcement(
+            ApiKey apiKey,
+            LocalDateTime blockedAt,
+            Integer limitExceededBy,
+            String message) {
         this.apiKey = apiKey;
         this.blockedAt = blockedAt;
         this.limitExceededBy = limitExceededBy;
@@ -60,7 +62,7 @@ public class RateLimitEnforcement {
         this.blockedAt = blockedAt;
     }
 
-    // ❌ Test-only setter
+    // ❌ TEST-ONLY setter (kept for tests)
     @JsonIgnore
     public void setBlockedAt(Instant blockedAt) {
         this.blockedAt =
