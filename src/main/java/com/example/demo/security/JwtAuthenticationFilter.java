@@ -35,20 +35,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-
         String token = null;
-        String email = null;
+        String username = null;
 
+        // 1️⃣ Extract token
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            email = jwtUtil.getUsername(token);
+
+            try {
+                username = jwtUtil.getUsername(token);
+            } catch (Exception e) {
+                // ❌ Invalid / tampered token
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
 
-        if (email != null &&
+        // 2️⃣ Validate token BEFORE authentication
+        if (username != null &&
             SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails =
-                    userDetailsService.loadUserByUsername(email);
+                    userDetailsService.loadUserByUsername(username);
 
             if (jwtUtil.isTokenValid(token, userDetails.getUsername())) {
 
