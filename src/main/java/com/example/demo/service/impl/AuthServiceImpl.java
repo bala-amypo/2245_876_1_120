@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager; // REQUIRED BY TESTS
     private final JwtUtil jwtUtil;
 
-    // ✅ EXACT constructor signature required by tests
+    
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // ✅ MUST use saved entity
+        
         UserAccount savedUser = userAccountRepository.save(user);
 
         Map<String, Object> claims = new HashMap<>();

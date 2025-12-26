@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 
-        // ✅ THIS LINE IS THE KEY
+      
         String role = "ROLE_" + user.getRole();
 
         return new org.springframework.security.core.userdetails.User(
