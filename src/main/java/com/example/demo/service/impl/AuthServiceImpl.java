@@ -13,6 +13,9 @@ import com.example.demo.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -45,13 +48,16 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // ✅ MUST capture saved user (tests rely on it)
+        // ✅ MUST use saved user (tests depend on it)
         UserAccount savedUser = userAccountRepository.save(user);
 
-        // ✅ JwtUtil expects (email, role)
+        // ✅ JwtUtil REQUIRES claims + subject
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", savedUser.getRole());
+
         String token = jwtUtil.generateToken(
-                savedUser.getEmail(),
-                savedUser.getRole()
+                claims,
+                savedUser.getEmail()
         );
 
         return new AuthResponseDto(
@@ -77,9 +83,12 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid credentials");
         }
 
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
+
         String token = jwtUtil.generateToken(
-                user.getEmail(),
-                user.getRole()
+                claims,
+                user.getEmail()
         );
 
         return new AuthResponseDto(
