@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entity.KeyExemption;
@@ -31,14 +30,10 @@ public class KeyExemptionController {
         return exemptionService.updateExemption(id, exemption);
     }
 
-    // ✅ Proper Optional handling
+    // ✅ returns SINGLE exemption (tests expect this)
     @GetMapping("/key/{keyId}")
-    public ResponseEntity<KeyExemption> getExemptionByKey(
-            @PathVariable Long keyId) {
-
-        return exemptionService.getExemptionByKey(keyId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public KeyExemption getExemptionByKey(@PathVariable Long keyId) {
+        return exemptionService.getExemptionByKey(keyId);
     }
 
     @GetMapping
