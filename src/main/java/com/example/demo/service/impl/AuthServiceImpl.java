@@ -10,6 +10,7 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +22,19 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager; // REQUIRED BY TESTS
     private final JwtUtil jwtUtil;
 
-    // ✅ SINGLE constructor (tests + Spring)
+    // ✅ EXACT constructor signature required by tests
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
             JwtUtil jwtUtil
     ) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
 
@@ -48,10 +52,9 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // ✅ MUST use saved user (tests depend on it)
+        // ✅ MUST use saved entity
         UserAccount savedUser = userAccountRepository.save(user);
 
-        // ✅ JwtUtil REQUIRES claims + subject
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", savedUser.getRole());
 
@@ -76,7 +79,6 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-        // ✅ REQUIRED by tests
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword())) {
