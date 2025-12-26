@@ -29,11 +29,11 @@ public class ApiKey {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // No-arg constructor
+    
     public ApiKey() {
     }
 
-    // Parameterized constructor
+    
     public ApiKey(String keyValue, Long ownerId, QuotaPlan plan, Boolean active) {
         this.keyValue = keyValue;
         this.ownerId = ownerId;
@@ -52,23 +52,21 @@ public class ApiKey {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // ===== REQUIRED BY TESTS =====
 
     public Long getId() {
         return id;
     }
 
-    // Tests call setId(...)
+    
     public void setId(Long id) {
         this.id = id;
     }
 
-    // Tests call isActive()
+   
     public boolean isActive() {
         return Boolean.TRUE.equals(this.active);
     }
 
-    // ===== STANDARD GETTERS/SETTERS =====
 
     public String getKeyValue() {
         return keyValue;

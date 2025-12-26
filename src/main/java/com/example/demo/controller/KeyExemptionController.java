@@ -30,7 +30,7 @@ public class KeyExemptionController {
         return exemptionService.updateExemption(id, exemption);
     }
 
-    // ✅ returns SINGLE exemption (tests expect this)
+    
     @GetMapping("/key/{keyId}")
     public KeyExemption getExemptionByKey(@PathVariable Long keyId) {
         return exemptionService.getExemptionByKey(keyId);

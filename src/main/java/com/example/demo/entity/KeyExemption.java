@@ -28,14 +28,14 @@ public class KeyExemption {
 
     private Integer temporaryExtensionLimit;
 
-    // ✅ Accepts ISO timestamps from Swagger
+   
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime validUntil;
 
     public KeyExemption() {}
 
-    // ===== GETTERS =====
+
     public Long getId() { return id; }
     public ApiKey getApiKey() { return apiKey; }
     public String getNotes() { return notes; }
@@ -43,7 +43,7 @@ public class KeyExemption {
     public Integer getTemporaryExtensionLimit() { return temporaryExtensionLimit; }
     public LocalDateTime getValidUntil() { return validUntil; }
 
-    // ===== SETTERS =====
+
     public void setApiKey(ApiKey apiKey) {
         this.apiKey = apiKey;
     }
@@ -60,12 +60,12 @@ public class KeyExemption {
         this.temporaryExtensionLimit = temporaryExtensionLimit;
     }
 
-    // ✅ JSON setter
+  
     public void setValidUntil(LocalDateTime validUntil) {
         this.validUntil = validUntil;
     }
 
-    // ❌ Test-only setter (hidden from Swagger/JSON)
+    
     @JsonIgnore
     public void setValidUntil(Instant validUntil) {
         this.validUntil =
