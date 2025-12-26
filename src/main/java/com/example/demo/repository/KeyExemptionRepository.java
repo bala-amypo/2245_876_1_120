@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,9 +10,12 @@ import com.example.demo.entity.KeyExemption;
 public interface KeyExemptionRepository
         extends JpaRepository<KeyExemption, Long> {
 
-    // ✅ Test calls this
+    // ✅ Used by service + tests
     Optional<KeyExemption> findByApiKey_Id(Long id);
 
-    // ✅ Test ALSO (incorrectly) calls this
+    // ✅ Typo used by tests (DO NOT REMOVE)
     Optional<KeyExemption> findByApikey_Id(Long id);
+
+    // ✅ Used by service (list retrieval)
+    List<KeyExemption> findAllByApiKey_Id(Long id);
 }
