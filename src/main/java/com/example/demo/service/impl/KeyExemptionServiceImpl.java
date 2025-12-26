@@ -26,6 +26,8 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         this.apiKeyRepository = apiKeyRepository;
     }
 
+    // ================= CREATE =================
+
     @Override
     public KeyExemption createExemption(KeyExemption exemption) {
 
@@ -50,6 +52,8 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return exemptionRepository.save(exemption);
     }
 
+    // ================= UPDATE =================
+
     @Override
     public KeyExemption updateExemption(Long id, KeyExemption exemption) {
 
@@ -66,20 +70,18 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return exemptionRepository.save(existing);
     }
 
-    // ✅ FIXED — returns LIST
+    // ================= GET BY API KEY (TESTED METHOD) =================
+
     @Override
-    public List<KeyExemption> getExemptionByKey(Long apiKeyId) {
+    public KeyExemption getExemptionByKey(Long apiKeyId) {
 
-        List<KeyExemption> exemptions =
-                exemptionRepository.findAllByApiKey_Id(apiKeyId);
-
-        if (exemptions.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    "No KeyExemption found for apiKeyId=" + apiKeyId);
-        }
-
-        return exemptions;
+        return exemptionRepository.findByApiKey_Id(apiKeyId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "No KeyExemption found for apiKeyId=" + apiKeyId));
     }
+
+    // ================= GET ALL =================
 
     @Override
     public List<KeyExemption> getAllExemptions() {
