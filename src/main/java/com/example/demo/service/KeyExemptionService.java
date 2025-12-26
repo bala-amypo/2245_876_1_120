@@ -10,8 +10,8 @@ public interface KeyExemptionService {
 
     KeyExemption updateExemption(Long id, KeyExemption exemption);
 
-    // ✅ CHANGED return type
-    List<KeyExemption> getExemptionByKey(Long apiKeyId);
+    // ✅ MUST return SINGLE entity (tests expect this)
+    KeyExemption getExemptionByKey(Long apiKeyId);
 
     List<KeyExemption> getAllExemptions();
 }
