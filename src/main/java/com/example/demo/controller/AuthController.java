@@ -1,28 +1,29 @@
-package com.example.demo.config;
+package com.example.demo.controller;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-@Configuration
-public class SecurityConfig {
+import com.example.demo.dto.*;
+import com.example.demo.service.AuthService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-            .httpBasic(Customizer.withDefaults());
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
 
-        return http.build();
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    @PostMapping("/register")
+    public AuthResponseDto register(
+            @RequestBody RegisterRequestDto dto) {
+        return authService.register(dto);
+    }
+
+    @PostMapping("/login")
+    public AuthResponseDto login(
+            @RequestBody AuthRequestDto dto) {
+        return authService.login(dto);
     }
 }
