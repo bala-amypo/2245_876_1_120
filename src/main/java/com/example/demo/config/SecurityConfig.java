@@ -12,20 +12,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.JwtAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            JwtAuthenticationEntryPoint authenticationEntryPoint
-    ) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -37,18 +31,31 @@ public class SecurityConfig {
                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // 🔐 Handle unauthorized access properly
-            .exceptionHandling(ex ->
-                ex.authenticationEntryPoint(authenticationEntryPoint)
-            )
-
             .authorizeHttpRequests(auth -> auth
+
+                // 🔓 PUBLIC
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**",
+                        "/simple-status"
                 ).permitAll()
+
+                // 🔐 ADMIN ONLY
+                .requestMatchers(
+                        "/api/quota-plans/**",
+                        "/api/api-keys/**",
+                        "/api/enforcements/**",
+                        "/api/key-exemptions/**"
+                ).hasRole("ADMIN")
+
+                // 🔐 USER + ADMIN
+                .requestMatchers(
+                        "/api/usage-logs/**"
+                ).hasAnyRole("USER", "ADMIN")
+
+                // 🔐 EVERYTHING ELSE
                 .anyRequest().authenticated()
             )
 
