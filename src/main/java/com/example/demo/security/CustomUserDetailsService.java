@@ -12,24 +12,27 @@ import com.example.demo.repository.UserAccountRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserAccountRepository userRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    public CustomUserDetailsService(UserAccountRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        UserAccount user = userRepository.findByEmail(email)
+        UserAccount user = userAccountRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
+
+        // ✅ THIS LINE IS THE KEY
+        String role = "ROLE_" + user.getRole();
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole()))
+                List.of(new SimpleGrantedAuthority(role))
         );
     }
 }
