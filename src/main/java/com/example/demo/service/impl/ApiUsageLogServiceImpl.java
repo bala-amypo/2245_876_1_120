@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -22,8 +20,9 @@ public class ApiUsageLogServiceImpl implements ApiUsageLogService {
     private final ApiUsageLogRepository usageRepository;
     private final ApiKeyRepository apiKeyRepository;
 
-    public ApiUsageLogServiceImpl(ApiUsageLogRepository usageRepository,
-                                  ApiKeyRepository apiKeyRepository) {
+    public ApiUsageLogServiceImpl(
+            ApiUsageLogRepository usageRepository,
+            ApiKeyRepository apiKeyRepository) {
         this.usageRepository = usageRepository;
         this.apiKeyRepository = apiKeyRepository;
     }
@@ -39,7 +38,6 @@ public class ApiUsageLogServiceImpl implements ApiUsageLogService {
                 .orElseThrow(() -> new ResourceNotFoundException("ApiKey not found"));
 
         log.setApiKey(apiKey);
-
         return usageRepository.save(log);
     }
 
@@ -51,32 +49,18 @@ public class ApiUsageLogServiceImpl implements ApiUsageLogService {
     @Override
     public List<ApiUsageLog> getUsageForToday(Long keyId) {
 
-        Instant start = LocalDate.now()
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant();
+        LocalDateTime start = LocalDate.now().atStartOfDay();
+        LocalDateTime end = LocalDateTime.now();
 
-        Instant end = LocalDate.now()
-                .atTime(23, 59, 59)
-                .atZone(ZoneId.systemDefault())
-                .toInstant();
-
-        // ✅ PASS Instant — NOT long
         return usageRepository.findForKeyBetween(keyId, start, end);
     }
 
     @Override
     public int countRequestsToday(Long keyId) {
 
-        Instant start = LocalDate.now()
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant();
+        LocalDateTime start = LocalDate.now().atStartOfDay();
+        LocalDateTime end = LocalDateTime.now();
 
-        Instant end = LocalDate.now()
-                .atTime(23, 59, 59)
-                .atZone(ZoneId.systemDefault())
-                .toInstant();
-
-        
         return usageRepository.countForKeyBetween(keyId, start, end);
     }
 }

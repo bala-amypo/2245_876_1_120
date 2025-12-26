@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,12 +17,20 @@ public interface ApiUsageLogRepository extends JpaRepository<ApiUsageLog, Long> 
         WHERE l.apiKey.id = :keyId
         AND l.timestamp BETWEEN :start AND :end
     """)
-    List<ApiUsageLog> findForKeyBetween(Long keyId, Instant start, Instant end);
+    List<ApiUsageLog> findForKeyBetween(
+            Long keyId,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 
     @Query("""
         SELECT COUNT(l) FROM ApiUsageLog l
         WHERE l.apiKey.id = :keyId
         AND l.timestamp BETWEEN :start AND :end
     """)
-    int countForKeyBetween(Long keyId, Instant start, Instant end);
+    int countForKeyBetween(
+            Long keyId,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 }
