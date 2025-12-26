@@ -21,6 +21,10 @@ public class SwaggerConfig {
                 .scheme("bearer")
                 .bearerFormat("JWT");
 
+        Server proxyServer = new Server()
+                .url("https://9135.32procr.amypo.ai")
+                .description("Proxy Server");
+
         return new OpenAPI()
                 .components(
                         new Components()
@@ -29,9 +33,6 @@ public class SwaggerConfig {
                 .addSecurityItem(
                         new SecurityRequirement().addList("bearerAuth")
                 )
-                .servers(List.of(
-                        // 🔥 THIS MUST MATCH YOUR ACTUAL SERVER
-                        new Server().url("http://localhost:9001")
-                ));
+                .servers(List.of(proxyServer));
     }
 }
