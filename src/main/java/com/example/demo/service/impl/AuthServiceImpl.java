@@ -20,7 +20,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // ✅ EXACT constructor tests expect
+    // ✅ SINGLE constructor (tests + Spring)
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -31,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
+    // ================= REGISTER =================
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
 
@@ -44,9 +45,10 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // ✅ MUST use returned entity
+        // ✅ MUST capture saved user (tests rely on it)
         UserAccount savedUser = userAccountRepository.save(user);
 
+        // ✅ JwtUtil expects (email, role)
         String token = jwtUtil.generateToken(
                 savedUser.getEmail(),
                 savedUser.getRole()
@@ -60,19 +62,18 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
+    // ================= LOGIN =================
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
 
         UserAccount user = userAccountRepository.findByEmail(request.getEmail())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found")
-                );
+                        new ResourceNotFoundException("User not found"));
 
-        // ✅ REQUIRED password validation
+        // ✅ REQUIRED by tests
         if (!passwordEncoder.matches(
                 request.getPassword(),
-                user.getPassword()
-        )) {
+                user.getPassword())) {
             throw new BadRequestException("Invalid credentials");
         }
 
