@@ -21,29 +21,28 @@ public class UserAccount {
     @Column(nullable = false)
     private String role;
 
-    // No-arg constructor
     public UserAccount() {
     }
 
-    // Parameterized constructor
+  
     public UserAccount(String email, String password, String role) {
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    // ===== REQUIRED BY TESTS =====
+    
 
     public Long getId() {
         return id;
     }
 
-    // Tests call setId(...)
+   
     public void setId(Long id) {
         this.id = id;
     }
 
-    // ===== STANDARD GETTERS/SETTERS =====
+ 
 
     public String getEmail() {
         return email;

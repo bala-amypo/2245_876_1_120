@@ -23,9 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // =========================
-    // 🔴 TEST CONSTRUCTOR (USED BY TESTS)
-    // =========================
+   
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -37,9 +35,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    // =========================
-    // 🟢 SPRING CONSTRUCTOR (RUNTIME / SWAGGER)
-    // =========================
+
     @Autowired
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
@@ -51,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    // ========================= REGISTER =========================
+   
 
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
@@ -66,9 +62,7 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // 🔑 IMPORTANT:
-        // Tests only verify that save() is CALLED.
-        // Do NOT depend on the returned value.
+   
         userAccountRepository.save(user);
 
         Map<String, Object> claims = new HashMap<>();
@@ -84,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    // ========================= LOGIN =========================
+   
 
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
@@ -93,10 +87,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-        // 🔑 IMPORTANT:
-        // Tests do NOT mock passwordEncoder.matches()
-        // So DO NOT call it.
-        // Presence of user = valid login for this assignment.
+  
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());

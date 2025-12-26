@@ -9,6 +9,6 @@ import com.example.demo.entity.KeyExemption;
 public interface KeyExemptionRepository
         extends JpaRepository<KeyExemption, Long> {
 
-    // ✅ EXACT method name tests expect
+   
     Optional<KeyExemption> findByApiKey_Id(Long apiKeyId);
 }

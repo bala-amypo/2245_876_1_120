@@ -75,7 +75,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
                 .orElseThrow(() -> new ResourceNotFoundException("ApiKey not found"));
     }
 
-    // ✅ TESTS EXPECT THIS — NOT Optional
+    
     @Override
     public ApiKey getApiKeyByValue(String keyValue) {
         return apiKeyRepository.findByKeyValue(keyValue)

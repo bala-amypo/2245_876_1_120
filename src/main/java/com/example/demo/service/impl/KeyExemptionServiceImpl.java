@@ -66,7 +66,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return exemptionRepository.save(existing);
     }
 
-    // ✅ EXACT behavior tests expect
+    
     @Override
     public KeyExemption getExemptionByKey(Long apiKeyId) {
 

@@ -21,7 +21,7 @@ public class RateLimitEnforcement {
     @JoinColumn(name = "api_key_id", nullable = false)
     private ApiKey apiKey;
 
-    // ✅ ACCEPTS: 2025-12-25T14:09:28.957Z
+   
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime blockedAt;
@@ -45,24 +45,24 @@ public class RateLimitEnforcement {
         this.message = message;
     }
 
-    // ===== GETTERS =====
+   
     public Long getId() { return id; }
     public ApiKey getApiKey() { return apiKey; }
     public LocalDateTime getBlockedAt() { return blockedAt; }
     public Integer getLimitExceededBy() { return limitExceededBy; }
     public String getMessage() { return message; }
 
-    // ===== SETTERS =====
+  
     public void setApiKey(ApiKey apiKey) {
         this.apiKey = apiKey;
     }
 
-    // ✅ JSON setter
+   
     public void setBlockedAt(LocalDateTime blockedAt) {
         this.blockedAt = blockedAt;
     }
 
-    // ❌ TEST-ONLY setter (kept for tests)
+   
     @JsonIgnore
     public void setBlockedAt(Instant blockedAt) {
         this.blockedAt =
