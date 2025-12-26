@@ -10,6 +10,7 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,23 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // ✅ SINGLE constructor (Spring + tests friendly)
+    // =========================================================
+    // 🔴 TEST CONSTRUCTOR — REQUIRED (DO NOT REMOVE)
+    // =========================================================
+    public AuthServiceImpl(
+            UserAccountRepository userAccountRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JwtUtil jwtUtil
+    ) {
+        this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+
+    // =========================================================
+    // 🟢 SPRING CONSTRUCTOR — used at runtime
+    // =========================================================
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -48,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // 🔥 IMPORTANT FIX: saveAndFlush so ID is generated immediately
+        // ✅ saveAndFlush so ID is available immediately
         UserAccount savedUser = userAccountRepository.saveAndFlush(user);
 
         Map<String, Object> claims = new HashMap<>();
@@ -59,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
 
         return new AuthResponseDto(
                 token,
-                savedUser.getId(),   // ✅ NOT NULL anymore
+                savedUser.getId(),   // ✅ NOT NULL
                 savedUser.getEmail(),
                 savedUser.getRole()
         );
@@ -73,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-        // ✅ Validate password properly
+        // ✅ password validation (tests + real security)
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword())) {
