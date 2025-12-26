@@ -10,13 +10,8 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -25,25 +20,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // =========================================================
-    // 🔴 TEST CONSTRUCTOR (DO NOT REMOVE)
-    // Used by ApiRateLimiterQuotaManagerTest
-    // =========================================================
-    public AuthServiceImpl(
-            UserAccountRepository userAccountRepository,
-            PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager,
-            JwtUtil jwtUtil
-    ) {
-        this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
-
-    // =========================================================
-    // 🟢 SPRING RUNTIME CONSTRUCTOR (THIS ONE IS USED AT RUN)
-    // =========================================================
-    @Autowired
+    // ✅ EXACT constructor tests expect
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -54,7 +31,6 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    // ========================= REGISTER =========================
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
 
@@ -68,13 +44,13 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        UserAccount savedUser = userAccountRepository.saveAndFlush(user);
+        // ✅ MUST use returned entity
+        UserAccount savedUser = userAccountRepository.save(user);
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", savedUser.getRole());
-        claims.put("userId", savedUser.getId());
-
-        String token = jwtUtil.generateToken(claims, savedUser.getEmail());
+        String token = jwtUtil.generateToken(
+                savedUser.getEmail(),
+                savedUser.getRole()
+        );
 
         return new AuthResponseDto(
                 token,
@@ -84,25 +60,26 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    // ========================= LOGIN =========================
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
 
         UserAccount user = userAccountRepository.findByEmail(request.getEmail())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                        new ResourceNotFoundException("User not found")
+                );
 
+        // ✅ REQUIRED password validation
         if (!passwordEncoder.matches(
                 request.getPassword(),
-                user.getPassword())) {
+                user.getPassword()
+        )) {
             throw new BadRequestException("Invalid credentials");
         }
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRole());
-        claims.put("userId", user.getId());
-
-        String token = jwtUtil.generateToken(claims, user.getEmail());
+        String token = jwtUtil.generateToken(
+                user.getEmail(),
+                user.getRole()
+        );
 
         return new AuthResponseDto(
                 token,
