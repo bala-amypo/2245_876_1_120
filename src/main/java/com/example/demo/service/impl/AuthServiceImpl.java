@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.AuthRequestDto;
+import com.example.demo.dto.AuthResponseDto;
+import com.example.demo.dto.RegisterRequestDto;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -8,8 +10,6 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,20 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-   
-    public AuthServiceImpl(
-            UserAccountRepository userAccountRepository,
-            PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager,
-            JwtUtil jwtUtil
-    ) {
-        this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
-
-
-    @Autowired
+    // ✅ SINGLE constructor (Spring + tests friendly)
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -47,8 +34,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-   
-
+    // ========================= REGISTER =========================
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
 
@@ -62,24 +48,24 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-   
-        userAccountRepository.save(user);
+        // 🔥 IMPORTANT FIX: saveAndFlush so ID is generated immediately
+        UserAccount savedUser = userAccountRepository.saveAndFlush(user);
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", request.getRole());
+        claims.put("role", savedUser.getRole());
+        claims.put("userId", savedUser.getId());
 
-        String token = jwtUtil.generateToken(claims, request.getEmail());
+        String token = jwtUtil.generateToken(claims, savedUser.getEmail());
 
         return new AuthResponseDto(
                 token,
-                null,
-                request.getEmail(),
-                request.getRole()
+                savedUser.getId(),   // ✅ NOT NULL anymore
+                savedUser.getEmail(),
+                savedUser.getRole()
         );
     }
 
-   
-
+    // ========================= LOGIN =========================
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
 
@@ -87,10 +73,16 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-  
+        // ✅ Validate password properly
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+            throw new BadRequestException("Invalid credentials");
+        }
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
+        claims.put("userId", user.getId());
 
         String token = jwtUtil.generateToken(claims, user.getEmail());
 
