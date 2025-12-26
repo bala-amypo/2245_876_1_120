@@ -12,41 +12,46 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.demo.security.JwtAuthenticationFilter;
+import com.example.demo.security.JwtAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            JwtAuthenticationEntryPoint authenticationEntryPoint
+    ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // JWT → no sessions
             .csrf(csrf -> csrf.disable())
             .sessionManagement(sm ->
                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // AUTH RULES
+            // 🔐 Handle unauthorized access properly
+            .exceptionHandling(ex ->
+                ex.authenticationEntryPoint(authenticationEntryPoint)
+            )
+
             .authorizeHttpRequests(auth -> auth
-                // 🔓 PUBLIC ENDPOINTS
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/v3/api-docs/**"
                 ).permitAll()
-
-                // 🔐 EVERYTHING ELSE NEEDS JWT
                 .anyRequest().authenticated()
             )
 
-            // JWT FILTER
             .addFilterBefore(
                     jwtAuthenticationFilter,
                     UsernamePasswordAuthenticationFilter.class
@@ -55,7 +60,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Needed by AuthServiceImpl (tests + runtime)
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
