@@ -33,7 +33,7 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-                // 🔓 PUBLIC
+             
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
@@ -42,7 +42,7 @@ public class SecurityConfig {
                         "/simple-status"
                 ).permitAll()
 
-                // 🔐 ADMIN ONLY
+               
                 .requestMatchers(
                         "/api/quota-plans/**",
                         "/api/api-keys/**",
@@ -50,12 +50,12 @@ public class SecurityConfig {
                         "/api/key-exemptions/**"
                 ).hasRole("ADMIN")
 
-                // 🔐 USER + ADMIN
+              
                 .requestMatchers(
                         "/api/usage-logs/**"
                 ).hasAnyRole("USER", "ADMIN")
 
-                // 🔐 EVERYTHING ELSE
+               
                 .anyRequest().authenticated()
             )
 
