@@ -10,6 +10,7 @@ import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
 
     // =========================================================
-    // 🔴 TEST CONSTRUCTOR — REQUIRED (DO NOT REMOVE)
+    // 🔴 TEST CONSTRUCTOR (DO NOT REMOVE)
+    // Used by ApiRateLimiterQuotaManagerTest
     // =========================================================
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
@@ -39,8 +41,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     // =========================================================
-    // 🟢 SPRING CONSTRUCTOR — used at runtime
+    // 🟢 SPRING RUNTIME CONSTRUCTOR (THIS ONE IS USED AT RUN)
     // =========================================================
+    @Autowired
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
@@ -65,7 +68,6 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // ✅ saveAndFlush so ID is available immediately
         UserAccount savedUser = userAccountRepository.saveAndFlush(user);
 
         Map<String, Object> claims = new HashMap<>();
@@ -76,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
 
         return new AuthResponseDto(
                 token,
-                savedUser.getId(),   // ✅ NOT NULL
+                savedUser.getId(),
                 savedUser.getEmail(),
                 savedUser.getRole()
         );
@@ -90,7 +92,6 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-        // ✅ password validation (tests + real security)
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword())) {
