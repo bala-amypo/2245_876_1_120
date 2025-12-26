@@ -66,7 +66,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return exemptionRepository.save(existing);
     }
 
-    // ✅ THIS IS WHAT TESTS EXPECT
+    // ✅ TEST + SWAGGER SAFE
     @Override
     public KeyExemption getExemptionByKey(Long apiKeyId) {
 
