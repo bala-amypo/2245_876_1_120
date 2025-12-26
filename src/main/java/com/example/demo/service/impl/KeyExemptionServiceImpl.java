@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
     private final KeyExemptionRepository exemptionRepository;
     private final ApiKeyRepository apiKeyRepository;
 
+    // ✅ constructor order EXACTLY as rules
     public KeyExemptionServiceImpl(
             KeyExemptionRepository exemptionRepository,
             ApiKeyRepository apiKeyRepository) {
@@ -57,6 +59,18 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("KeyExemption not found"));
 
+        if (exemption.getTemporaryExtensionLimit() != null
+                && exemption.getTemporaryExtensionLimit() < 0) {
+            throw new BadRequestException(
+                    "temporaryExtensionLimit must be >= 0");
+        }
+
+        if (exemption.getValidUntil() != null
+                && exemption.getValidUntil().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException(
+                    "validUntil must be in the future");
+        }
+
         existing.setNotes(exemption.getNotes());
         existing.setUnlimitedAccess(exemption.getUnlimitedAccess());
         existing.setTemporaryExtensionLimit(
@@ -66,14 +80,10 @@ public class KeyExemptionServiceImpl implements KeyExemptionService {
         return exemptionRepository.save(existing);
     }
 
-    // ✅ TEST + SWAGGER SAFE
+    // ✅ EXACT spec behavior
     @Override
-    public KeyExemption getExemptionByKey(Long apiKeyId) {
-
-        return exemptionRepository.findByApiKey_Id(apiKeyId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "No KeyExemption found for apiKeyId=" + apiKeyId));
+    public Optional<KeyExemption> getExemptionByKey(Long apiKeyId) {
+        return exemptionRepository.findByApiKey_Id(apiKeyId);
     }
 
     @Override
