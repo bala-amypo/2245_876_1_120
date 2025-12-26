@@ -5,7 +5,6 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,26 +16,22 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
 
-        // 🔐 JWT Bearer scheme
         SecurityScheme bearerAuth = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
                 .bearerFormat("JWT");
 
-        // 🌐 Your deployed server
-        Server server = new Server()
-                .url("https://9135.32procr.amypo.ai")
-                .description("Production Server");
-
         return new OpenAPI()
-                // Apply JWT globally
-                .addSecurityItem(
-                        new SecurityRequirement().addList("bearerAuth")
-                )
                 .components(
                         new Components()
                                 .addSecuritySchemes("bearerAuth", bearerAuth)
                 )
-                .servers(List.of(server));
+                .addSecurityItem(
+                        new SecurityRequirement().addList("bearerAuth")
+                )
+                .servers(List.of(
+                        // 🔥 THIS MUST MATCH YOUR ACTUAL SERVER
+                        new Server().url("http://localhost:9001")
+                ));
     }
 }
