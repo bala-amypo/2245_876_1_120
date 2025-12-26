@@ -28,7 +28,7 @@ public class KeyExemption {
 
     private Integer temporaryExtensionLimit;
 
-    // ✅ Accepts ISO timestamps like 2025-12-25T14:09:28.957Z
+    // ✅ Accepts ISO timestamps from Swagger
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime validUntil;
@@ -65,7 +65,7 @@ public class KeyExemption {
         this.validUntil = validUntil;
     }
 
-    // ❌ Test-only setter (kept, hidden from JSON)
+    // ❌ Test-only setter (hidden from Swagger/JSON)
     @JsonIgnore
     public void setValidUntil(Instant validUntil) {
         this.validUntil =

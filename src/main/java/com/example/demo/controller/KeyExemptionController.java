@@ -46,7 +46,7 @@ public class KeyExemptionController {
         return exemptionService.updateExemption(id, exemption);
     }
 
-    // ✅ FIXED — returns LIST
+    // ✅ RETURNS LIST (Swagger + DB-safe)
     @GetMapping("/key/{keyId}")
     public List<KeyExemption> getExemptionByKey(@PathVariable Long keyId) {
         return exemptionService.getExemptionByKey(keyId);
