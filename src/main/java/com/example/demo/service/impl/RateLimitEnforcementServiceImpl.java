@@ -43,7 +43,7 @@ public class RateLimitEnforcementServiceImpl
                 .orElseThrow(() ->
                         new ResourceNotFoundException("ApiKey not found"));
 
-        // 🔥 NORMALIZE SWAGGER REQUEST (KEY FIX)
+       
         RateLimitEnforcement clean = new RateLimitEnforcement();
         clean.setApiKey(apiKey);
         clean.setLimitExceededBy(enforcement.getLimitExceededBy());

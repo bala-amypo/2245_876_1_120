@@ -12,7 +12,7 @@ public interface ApiKeyService {
 
     ApiKey getApiKeyById(Long id);
 
-    // ✅ MUST return ApiKey (NOT Optional)
+   
     ApiKey getApiKeyByValue(String keyValue);
 
     List<ApiKey> getAllApiKeys();
