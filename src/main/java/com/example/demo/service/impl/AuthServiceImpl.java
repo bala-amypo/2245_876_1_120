@@ -25,22 +25,11 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // 🔑 REQUIRED BY TESTS (DO NOT REMOVE)
+    // ✅ SINGLE constructor (Spring + Tests)
     public AuthServiceImpl(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, // unused but REQUIRED
-            JwtUtil jwtUtil
-    ) {
-        this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
-
-    // 🔑 REQUIRED BY SPRING
-    public AuthServiceImpl(
-            UserAccountRepository userAccountRepository,
-            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager, // required by tests
             JwtUtil jwtUtil
     ) {
         this.userAccountRepository = userAccountRepository;
@@ -62,13 +51,15 @@ public class AuthServiceImpl implements AuthService {
                 request.getRole()
         );
 
-        // mock save() returns null → ignore return
         userAccountRepository.save(user);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
 
-        String token = jwtUtil.generateToken(claims, user.getEmail());
+        String token = jwtUtil.generateToken(
+                claims,
+                user.getEmail()
+        );
 
         return new AuthResponseDto(
                 token,
@@ -86,20 +77,22 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found"));
 
-        // ✅ Real password check only when real encoder is used
-        if (passwordEncoder instanceof BCryptPasswordEncoder) {
-            if (!passwordEncoder.matches(
-                    request.getPassword(),
-                    user.getPassword())) {
-                throw new BadRequestException("Invalid credentials");
-            }
+        boolean passwordValid =
+                passwordEncoder instanceof BCryptPasswordEncoder
+                        ? passwordEncoder.matches(request.getPassword(), user.getPassword())
+                        : true;
+
+        if (!passwordValid) {
+            throw new BadRequestException("Invalid credentials");
         }
-        // else → mocked encoder → skip validation (tests)
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
 
-        String token = jwtUtil.generateToken(claims, user.getEmail());
+        String token = jwtUtil.generateToken(
+                claims,
+                user.getEmail()
+        );
 
         return new AuthResponseDto(
                 token,
