@@ -12,28 +12,44 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.demo.security.JwtAuthenticationFilter;
+import com.example.demo.security.JwtAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    // ✅ BOTH beans injected
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
+    ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+            // 🔐 No CSRF for REST APIs
             .csrf(csrf -> csrf.disable())
+
+            // 🔐 Stateless JWT
             .sessionManagement(sm ->
                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
+            // ⭐ THIS IS THE MISSING PIECE
+            .exceptionHandling(ex ->
+                ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            )
+
+            // 🔐 AUTHORIZATION RULES
             .authorizeHttpRequests(auth -> auth
 
-             
+                // 🔓 PUBLIC ENDPOINTS
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
@@ -42,7 +58,7 @@ public class SecurityConfig {
                         "/simple-status"
                 ).permitAll()
 
-               
+                // 🔐 ADMIN ONLY
                 .requestMatchers(
                         "/api/quota-plans/**",
                         "/api/api-keys/**",
@@ -50,15 +66,16 @@ public class SecurityConfig {
                         "/api/key-exemptions/**"
                 ).hasRole("ADMIN")
 
-              
+                // 🔐 USER + ADMIN
                 .requestMatchers(
                         "/api/usage-logs/**"
                 ).hasAnyRole("USER", "ADMIN")
 
-               
+                // 🔐 EVERYTHING ELSE
                 .anyRequest().authenticated()
             )
 
+            // 🔑 JWT FILTER
             .addFilterBefore(
                     jwtAuthenticationFilter,
                     UsernamePasswordAuthenticationFilter.class
@@ -67,6 +84,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Needed for AuthService + tests
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
