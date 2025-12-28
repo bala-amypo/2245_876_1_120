@@ -1,6 +1,7 @@
 package com.example.demo.security;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.crypto.SecretKey;
@@ -20,7 +21,9 @@ public class JwtUtil {
 
     private final long EXPIRATION = 1000 * 60 * 60; // 1 hour
 
-    // ===== USED BY AuthServiceImpl =====
+    // ======================================================
+    // USED BY TESTCASES (they expect this exact signature)
+    // ======================================================
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -31,6 +34,18 @@ public class JwtUtil {
                 .compact();
     }
 
+    // ======================================================
+    // USED BY AuthServiceImpl (email + role)
+    // ======================================================
+    public String generateToken(String email, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        return generateToken(claims, email);
+    }
+
+    // ======================================================
+    // TOKEN PARSING & VALIDATION
+    // ======================================================
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
